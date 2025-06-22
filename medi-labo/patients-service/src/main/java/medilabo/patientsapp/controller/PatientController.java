@@ -70,7 +70,8 @@ public class PatientController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Patient> deletePatient(@PathVariable("id") int id) {
         try {
-            patientService.deletePatient(id);
+            Patient patient = patientService.getPatientById(id);
+            patientService.deletePatient(patient);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NonExistingPatientException e) {
             logger.error("Deletion failed for Patient ID: {}. ID not found.", id);

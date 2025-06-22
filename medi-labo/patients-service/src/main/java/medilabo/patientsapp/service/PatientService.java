@@ -35,7 +35,7 @@ public class PatientService {
             return patientRepo.save(patient);
     }
 
-    public void deletePatient(int id) {
-        patientRepo.delete(getPatientById(id));
+    public void deletePatient(Patient patient) {
+        patientRepo.delete(patient);
     }
 }
