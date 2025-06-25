@@ -31,6 +31,7 @@ public class PatientController {
 
     @GetMapping
     public ResponseEntity<List<Patient>> getAllPatients() {
+        logger.info("GetMapping for /patients");
         List<Patient> patients = patientService.getAllPatients();
         if (patients.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -40,6 +41,7 @@ public class PatientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Patient> getPatientById(@PathVariable("id") int id) {
+        logger.info("GetMapping for /patients/{}", id);
         try {
             return new ResponseEntity<>(patientService.getPatientById(id), HttpStatus.OK);
         } catch (NonExistingPatientException e) {
@@ -49,6 +51,7 @@ public class PatientController {
 
     @PostMapping
     public ResponseEntity<Patient> registerPatient(@RequestBody @Valid Patient patient) {
+        logger.info("PostMapping for /patients");
         try {
             return new ResponseEntity<>(patientService.addPatient(patient), HttpStatus.CREATED);
         } catch (Exception e) {
@@ -58,7 +61,8 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Patient> updatePatient(@RequestBody @Valid Patient patient) {
+    public ResponseEntity<Patient> updatePatient(@PathVariable("id") int id, @RequestBody @Valid Patient patient) {
+        logger.info("PutMapping for /patients/{}", id);
         try {
             return new ResponseEntity<>(patientService.updatePatient(patient), HttpStatus.OK);
         } catch (Exception e) {
@@ -69,6 +73,7 @@ public class PatientController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Patient> deletePatient(@PathVariable("id") int id) {
+        logger.info("DeleteMapping for /patients/{}", id);
         try {
             Patient patient = patientService.getPatientById(id);
             patientService.deletePatient(patient);

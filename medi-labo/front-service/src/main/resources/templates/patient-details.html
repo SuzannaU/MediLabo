@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          integrity="sha384-..." crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <title>Détails Patient</title>
+</head>
+<body>
+<div class="container">
+    <h2 th:text="${patient.firstname + ' ' + patient.lastname}"></h2>
+    <div class="row">
+        <div class="col-1">
+            <a class="btn btn-primary btn-sm" href="/front-service/patients">Retour</a>
+        </div>
+        <div class="col-1">
+            <a th:href="@{/front-service/patients/edit/{id}(id=${patient.id})}" class="btn btn-primary btn-sm">Modifier</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <p>Nom</p>
+        </div>
+        <div class="col-8" th:text="${patient.lastname}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <p>Prénom</p>
+        </div>
+        <div class="col-8" th:text="${patient.firstname}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <p>Date de naissance</p>
+        </div>
+        <div class="col-8" th:text="${patient.birthdate}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <p>Genre</p>
+        </div>
+        <div class="col-8" th:text="${patient.gender}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <p>Adresse</p>
+        </div>
+        <div class="col-8" th:text="${patient.address}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <p>Téléphone</p>
+        </div>
+        <div class="col-8" th:text="${patient.phoneNumber}">
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+#          routes:
+#            - id: patients-route
+#              uri: lb://front-service
+#              predicates:
+#                - Path=/patients/**
+#              filters:
+#                - StripPrefix=1
+    loadbalancer:
+      cache:
+        ttl: 5s
