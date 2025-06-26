@@ -1,6 +1,7 @@
 package medilabo.frontapp.controller;
 
 import jakarta.validation.Valid;
+import medilabo.frontapp.config.CustomProperties;
 import medilabo.frontapp.model.Patient;
 import medilabo.frontapp.model.PatientDTO;
 import medilabo.frontapp.service.PatientService;
@@ -16,12 +17,15 @@ import java.util.List;
 public class PatientController {
     private final Logger logger = LoggerFactory.getLogger(PatientController.class);
 
+    private final CustomProperties customProperties;
     private final PatientService patientService;
-    public PatientController(PatientService patientService) {
+
+    public PatientController(CustomProperties customProperties, PatientService patientService) {
+        this.customProperties = customProperties;
         this.patientService = patientService;
     }
 
-    @GetMapping("/patients")
+    @GetMapping(value={"/patients","", "/"})
     public String getPatients (Model model) {
         logger.info("GetMapping for /patients");
         List<Patient> patients = patientService.getAllPatients();
@@ -47,8 +51,8 @@ public class PatientController {
     @PostMapping("/patients/add")
     public String addPatient(@Valid @ModelAttribute("patient") PatientDTO patient) {
         logger.info("PostMapping for /patients");
-        Patient savedPatient = patientService.createPatient(patient);
-        return "redirect:/patients";
+        patientService.createPatient(patient);
+        return "redirect:" + getProxiedServiceUrl() + "/patients";
     }
 
     @GetMapping("/patients/edit/{id}")
@@ -64,13 +68,18 @@ public class PatientController {
         logger.info("PostMapping for /patients/edit/{}", id);
         logger.info("Update patient: {}", patientDTO);
         patientService.updatePatient(id, patientDTO);
-        return "redirect:/patients/" + id;
+        return "redirect:" + getProxiedServiceUrl() + "/patients/" + id;
     }
 
     @PostMapping("/patients/delete/{id}")
     public String deletePatient (@PathVariable("id") int id) {
         logger.info("PostMapping for /patients/delete/{}", id);
         patientService.deletePatient(id);
-        return "redirect:/patients";
+        return "redirect:" + getProxiedServiceUrl() + "/patients";
+    }
+
+    private String getProxiedServiceUrl(){
+        String gatewayUrl= customProperties.getGatewayUrl();
+        return gatewayUrl + "/front-service";
     }
 }

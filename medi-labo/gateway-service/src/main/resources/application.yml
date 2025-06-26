@@ -7,13 +7,19 @@ spring:
             locator:
               enabled: true
               lower-case-service-id: true
+          forwarded:
+            enabled: true
 #          routes:
-#            - id: patients-route
+#            - id : front-service
 #              uri: lb://front-service
 #              predicates:
-#                - Path=/patients/**
-#              filters:
-#                - StripPrefix=1
+#                - Path=/front-service/**
     loadbalancer:
       cache:
         ttl: 5s
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5
+    fetch-registry: true
+    register-with-eureka: true
