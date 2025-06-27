@@ -107,11 +107,11 @@ public class PatientControllerIT {
     }
 
     @Test
-    public void getPatientById_withBadId_shouldReturnBadRequest() throws Exception {
+    public void getPatientById_withBadId_shouldReturnNotFound() throws Exception {
 
         MvcResult result = mockMvc
                 .perform(get("/patients/123456789"))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
@@ -139,13 +139,13 @@ public class PatientControllerIT {
 
     @ParameterizedTest
     @MethodSource("invalidPatientProvider")
-    public void registerPatient_withInvalidPatient_shouldReturnBadRequest(Patient invalidPatient) throws Exception {
+    public void registerPatient_withInvalidPatient_shouldReturnInternalServerError(Patient invalidPatient) throws Exception {
 
         MvcResult result = mockMvc
                 .perform(post("/patients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(invalidPatient)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isInternalServerError())
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
@@ -173,13 +173,13 @@ public class PatientControllerIT {
 
     @ParameterizedTest
     @MethodSource("invalidPatientProvider")
-    public void updatePatient_withInvalidPatient_shouldReturnBadRequest(Patient invalidPatient) throws Exception {
+    public void updatePatient_withInvalidPatient_shouldReturnInternalServerError(Patient invalidPatient) throws Exception {
 
         MvcResult result = mockMvc
                 .perform(put("/patients/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(invalidPatient)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isInternalServerError())
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
@@ -198,9 +198,9 @@ public class PatientControllerIT {
     }
 
     @Test
-    public void deletePatient_withInvalidId_shouldReturnBadRequest() throws Exception {
+    public void deletePatient_withInvalidId_shouldReturnNotFound() throws Exception {
 
         mockMvc.perform(delete("/patients/123456789"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 }

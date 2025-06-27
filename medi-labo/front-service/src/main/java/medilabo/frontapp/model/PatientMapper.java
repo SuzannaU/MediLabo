@@ -13,4 +13,13 @@ public class PatientMapper {
         patient.setAddress(patientDTO.getAddress());
         patient.setPhoneNumber(patientDTO.getPhoneNumber());
     }
+
+    public static void mapPatientToPatientDTO(PatientDTO patientDTO, Patient patient) {
+        patientDTO.setFirstname(patient.getFirstname());
+        patientDTO.setLastname(patient.getLastname());
+        patientDTO.setBirthdate(patient.getBirthdate());
+        patientDTO.setGender(patient.getGender());
+        patientDTO.setAddress(patient.getAddress());
+        patientDTO.setPhoneNumber(patient.getPhoneNumber());
+    }
 }

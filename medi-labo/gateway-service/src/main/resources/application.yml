@@ -13,7 +13,10 @@ spring:
 #            - id : front-service
 #              uri: lb://front-service
 #              predicates:
-#                - Path=/front-service/**
+#                - Path=/patients/**
+#              filters:
+#                - StripPrefix=1
+#              order: -1
     loadbalancer:
       cache:
         ttl: 5s

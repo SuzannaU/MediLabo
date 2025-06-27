@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,18 +26,28 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    @GetMapping(value={"/patients","", "/"})
-    public String getPatients (Model model) {
+    @GetMapping(value = {"/patients", "", "/"})
+    public String getPatients(Model model) {
         logger.info("GetMapping for /patients");
         List<Patient> patients = patientService.getAllPatients();
+        if (patients == null) {
+            model.addAttribute("emptyListError", "Il n'y a aucun patient");
+            return "patients";
+        }
         model.addAttribute("patients", patients);
         return "patients";
     }
 
     @GetMapping("/patients/{id}")
-    public String getPatient (@PathVariable("id") int id, Model model) {
+    public String getPatient(@PathVariable("id") int id, Model model) {
         logger.info("GetMapping for /patients/{}", id);
         Patient patient = patientService.getPatient(id);
+        if (patient == null) {
+            model.addAttribute("status", 404);
+            model.addAttribute("error", "Not found");
+            model.addAttribute("message", "Le patient id : " + id + " n'existe pas.");
+            return "error";
+        }
         model.addAttribute("patient", patient);
         return "patient-details";
     }
@@ -49,37 +60,55 @@ public class PatientController {
     }
 
     @PostMapping("/patients/add")
-    public String addPatient(@Valid @ModelAttribute("patient") PatientDTO patient) {
+    public String addPatient(@Valid @ModelAttribute("patient") PatientDTO patientDTO, BindingResult result, Model model) {
         logger.info("PostMapping for /patients");
-        patientService.createPatient(patient);
-        return "redirect:" + getProxiedServiceUrl() + "/patients";
+        if (!result.hasErrors() && patientService.createPatient(patientDTO)) {
+            return "redirect:" + customProperties.getBaseUrl() + "/patients";
+        } else {
+            model.addAttribute("newPatientError", "Impossible de créer le Patient");
+            model.addAttribute("patient", patientDTO);
+            return "patient-form";
+        }
     }
 
     @GetMapping("/patients/edit/{id}")
     public String getEditPatientForm(@PathVariable("id") int id, Model model) {
         logger.info("GetMapping for /patients/edit/{}", id);
         Patient patient = patientService.getPatient(id);
+        if (patient == null) {
+            model.addAttribute("status", 404);
+            model.addAttribute("error", "Not found");
+            model.addAttribute("message", "Le patient id : " + id + " n'existe pas.");
+            return "error";
+        }
         model.addAttribute("patient", patient);
         return "update-patient";
     }
 
     @PostMapping("/patients/edit/{id}")
-    public String updatePatient (@PathVariable("id") int id, @Valid @ModelAttribute("patient") PatientDTO patientDTO) {
+    public String updatePatient(@PathVariable("id") int id, @Valid @ModelAttribute("patient") Patient patient, BindingResult result, Model model) {
         logger.info("PostMapping for /patients/edit/{}", id);
-        logger.info("Update patient: {}", patientDTO);
-        patientService.updatePatient(id, patientDTO);
-        return "redirect:" + getProxiedServiceUrl() + "/patients/" + id;
+        if (!result.hasErrors() && patientService.updatePatient(id, patient)) {
+            return "redirect:" + customProperties.getBaseUrl() + "/patients/" + id;
+        } else {
+            model.addAttribute("updatePatientError", "Impossible de modifier le Patient");
+            model.addAttribute("patient", patient);
+            return "update-patient";
+        }
     }
 
     @PostMapping("/patients/delete/{id}")
-    public String deletePatient (@PathVariable("id") int id) {
+    public String deletePatient(@PathVariable("id") int id, Model model) {
         logger.info("PostMapping for /patients/delete/{}", id);
-        patientService.deletePatient(id);
-        return "redirect:" + getProxiedServiceUrl() + "/patients";
-    }
-
-    private String getProxiedServiceUrl(){
-        String gatewayUrl= customProperties.getGatewayUrl();
-        return gatewayUrl + "/front-service";
+        if (patientService.deletePatient(id)) {
+            return "redirect:" + customProperties.getBaseUrl() + "/patients";
+        } else {
+            logger.error("Patient with id {} not found", id);
+            List<Patient> patients = patientService.getAllPatients();
+            model.addAttribute("patients", patients);
+            model.addAttribute("deletePatientError", "Impossible de supprimer le Patient");
+            return "patients";
+        }
     }
 }
+

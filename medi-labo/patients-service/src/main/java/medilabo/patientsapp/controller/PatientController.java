@@ -45,7 +45,7 @@ public class PatientController {
         try {
             return new ResponseEntity<>(patientService.getPatientById(id), HttpStatus.OK);
         } catch (NonExistingPatientException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -56,7 +56,7 @@ public class PatientController {
             return new ResponseEntity<>(patientService.addPatient(patient), HttpStatus.CREATED);
         } catch (Exception e) {
             logger.error("Patient was not created : {}", patient.toString());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -67,7 +67,7 @@ public class PatientController {
             return new ResponseEntity<>(patientService.updatePatient(patient), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("Patient was not updated : {}", patient.toString());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -80,7 +80,7 @@ public class PatientController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NonExistingPatientException e) {
             logger.error("Deletion failed for Patient ID: {}. ID not found.", id);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

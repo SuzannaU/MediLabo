@@ -6,13 +6,22 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix="medilabo.frontapp")
 public class CustomProperties {
-    private String gatewayUrl;
+    private String baseUrl;
+    private String gatewayPort;
 
-    public String getGatewayUrl() {
-        return gatewayUrl;
+    public String getGatewayPort() {
+        return gatewayPort;
     }
 
-    public void setGatewayUrl(String gatewayUrl) {
-        this.gatewayUrl = gatewayUrl;
+    public void setGatewayPort(String gatewayPort) {
+        this.gatewayPort = gatewayPort;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 }

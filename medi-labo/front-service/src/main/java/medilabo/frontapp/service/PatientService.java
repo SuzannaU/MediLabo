@@ -1,12 +1,13 @@
 package medilabo.frontapp.service;
 
-import medilabo.frontapp.controller.PatientController;
+import feign.FeignException;
 import medilabo.frontapp.model.Patient;
 import medilabo.frontapp.model.PatientDTO;
 import medilabo.frontapp.model.PatientMapper;
 import medilabo.frontapp.proxy.PatientProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,25 +23,83 @@ public class PatientService {
     }
 
     public List<Patient> getAllPatients() {
-        return patientProxy.getAllPatients();
+        ResponseEntity<List<Patient>> response = patientProxy.getAllPatients();
+        int statusCode = response.getStatusCode().value();
+        if (statusCode == 200) {
+            logger.info("Successfully retrieved patient list");
+            return response.getBody();
+        } else if (statusCode == 204) {
+            logger.info("No patients found");
+            return null;
+        }
+        logger.error("Problem retrieving patients. Error: {} ", statusCode);
+        return null;
     }
 
     public Patient getPatient(int id) {
-        return patientProxy.getPatient(id);
+        try {
+            ResponseEntity<Patient> response = patientProxy.getPatient(id);
+            int statusCode = response.getStatusCode().value();
+            if (statusCode == 200) {
+                logger.info("Successfully retrieved patient with id {}", id);
+                return response.getBody();
+            }
+            logger.error("Problem retrieving patient. Error: {} ", statusCode);
+            return null;
+        } catch (FeignException.NotFound e) {
+            logger.error("No patient found with id {}", id);
+            return null;
+        } catch (FeignException e) {
+            logger.error("Problem retrieving patient with id {}. Error: {}", id, e.status());
+            return null;
+        }
     }
 
-    public Patient createPatient(PatientDTO patient) {
-        return patientProxy.createPatient(patient);
+    public boolean createPatient(PatientDTO patient) {
+        ResponseEntity<Patient> response = patientProxy.createPatient(patient);
+        int statusCode = response.getStatusCode().value();
+        if (statusCode == 201) {
+            logger.info("Patient successfully created ");
+            return true;
+        } else if (statusCode == 500) {
+            logger.error("Error: creating patient unsuccessful");
+            return false;
+        }
+        return false;
     }
 
-    public Patient updatePatient(int id, PatientDTO patientDTO) {
+    public boolean updatePatient(int id, Patient patient) {
         Patient existingPatient = getPatient(id);
-        PatientMapper.mapPatientDTOToPatient(patientDTO, existingPatient);
-        logger.info("Updating patient: {}", existingPatient);
-        return patientProxy.updatePatient(id, existingPatient);
+        //PatientMapper.mapPatientDTOToPatient(patientDTO, existingPatient);
+
+        ResponseEntity<Patient> response = patientProxy.updatePatient(id, patient);
+        int statusCode = response.getStatusCode().value();
+        if (statusCode == 200) {
+            logger.info("Patient with id {} updated successfully", id);
+            return true;
+        } else if (statusCode == 500) {
+            logger.error("Error: updating patient with id {} unsuccessful", id);
+            return false;
+        }
+        return false;
     }
 
-    public void deletePatient(int id) {
-        patientProxy.deletePatient(id);
+    public boolean deletePatient(int id) {
+        try {
+            ResponseEntity<Patient> response = patientProxy.deletePatient(id);
+            int statusCode = response.getStatusCode().value();
+            if (statusCode == 200) {
+                logger.info("Patient with id {} deleted successfully", id);
+                return true;
+            }
+            logger.error("Problem retrieving patient. Error: {} ", statusCode);
+            return false;
+        } catch (FeignException.NotFound e) {
+            logger.error("No patient to delete with id {}", id);
+            return false;
+        } catch (FeignException e) {
+            logger.error("Problem deleting patient with id {}. Error: {}", id, e.status());
+            return false;
+        }
     }
 }

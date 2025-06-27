@@ -87,12 +87,12 @@ public class PatientControllerTest {
     }
 
     @Test
-    public void getPatientById_withException_shouldReturnBadRequest() throws Exception {
+    public void getPatientById_withException_shouldReturnNotFound() throws Exception {
         when(patientService.getPatientById(anyInt())).thenThrow(new NonExistingPatientException());
 
         MvcResult result = mockMvc
                 .perform(get("/patients/1"))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
@@ -123,7 +123,7 @@ public class PatientControllerTest {
     }
 
     @Test
-    public void registerPatient_withException_shouldReturnBadRequest() throws Exception {
+    public void registerPatient_withException_shouldReturnInternalServerError() throws Exception {
         Patient patient = new Patient("firstname", "lastname", "birthdate", "gender");
         // TODO find real exception instead of this one
         when(patientService.addPatient(any(Patient.class))).thenThrow(new NonExistingPatientException());
@@ -132,7 +132,7 @@ public class PatientControllerTest {
                 .perform(post("/patients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(patient)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isInternalServerError())
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
@@ -163,7 +163,7 @@ public class PatientControllerTest {
     }
 
     @Test
-    public void updatePatient_withException_shouldReturnBadRequest() throws Exception {
+    public void updatePatient_withException_shouldInternalServerError() throws Exception {
         Patient patient = new Patient("firstname", "lastname", "birthdate", "gender");
         // TODO find real exception instead of this one
         when(patientService.updatePatient(any(Patient.class))).thenThrow(new NonExistingPatientException());
@@ -172,7 +172,7 @@ public class PatientControllerTest {
                 .perform(put("/patients/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(patient)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isInternalServerError())
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
@@ -193,13 +193,13 @@ public class PatientControllerTest {
     }
 
     @Test
-    public void deletePatient_withException_shouldReturnBadRequest() throws Exception {
+    public void deletePatient_withException_shouldReturnNotFound() throws Exception {
         when(patientService.getPatientById(anyInt())).thenReturn(new Patient());
         // TODO find real exception instead of this one
         doThrow(new NonExistingPatientException()).when(patientService).deletePatient(any(Patient.class));
 
         mockMvc.perform(delete("/patients/1"))
-                .andExpect((status().isBadRequest()));
+                .andExpect((status().isNotFound()));
 
         verify(patientService).deletePatient(any(Patient.class));
     }
