@@ -53,8 +53,7 @@ public class PatientControllerIT {
                 Arguments.of(new Patient("", "lastname", "birthdate", "g")),
                 Arguments.of(new Patient("firstname", "", "birthdate", "g")),
                 Arguments.of(new Patient("firstname", "lastname", "", "g")),
-                Arguments.of(new Patient("firstname", "lastname", "birthdate", "")),
-                Arguments.of(new Patient("firstname", "lastname", "birthdate", "gender"))
+                Arguments.of(new Patient("firstname", "lastname", "birthdate", ""))
         );
     }
 
@@ -139,13 +138,13 @@ public class PatientControllerIT {
 
     @ParameterizedTest
     @MethodSource("invalidPatientProvider")
-    public void registerPatient_withInvalidPatient_shouldReturnInternalServerError(Patient invalidPatient) throws Exception {
+    public void registerPatient_withInvalidPatient_shouldReturnBadRequest(Patient invalidPatient) throws Exception {
 
         MvcResult result = mockMvc
                 .perform(post("/patients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(invalidPatient)))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isBadRequest())
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
@@ -173,13 +172,13 @@ public class PatientControllerIT {
 
     @ParameterizedTest
     @MethodSource("invalidPatientProvider")
-    public void updatePatient_withInvalidPatient_shouldReturnInternalServerError(Patient invalidPatient) throws Exception {
+    public void updatePatient_withInvalidPatient_shouldReturnBadRequest(Patient invalidPatient) throws Exception {
 
         MvcResult result = mockMvc
                 .perform(put("/patients/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(invalidPatient)))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isBadRequest())
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();

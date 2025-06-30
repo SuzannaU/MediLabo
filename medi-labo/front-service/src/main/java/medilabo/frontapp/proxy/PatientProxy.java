@@ -1,5 +1,6 @@
 package medilabo.frontapp.proxy;
 
+import medilabo.frontapp.config.FeignConfig;
 import medilabo.frontapp.model.Patient;
 import medilabo.frontapp.model.PatientDTO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Repository
-@FeignClient(name = "gateway-service")
+@FeignClient(name = "gateway-service", configuration = FeignConfig.class)
 public interface PatientProxy {
 
     @GetMapping("/patients-service/patients")

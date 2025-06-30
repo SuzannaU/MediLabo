@@ -21,6 +21,16 @@ public class Patient {
     private String address;
     private String phoneNumber;
 
+    public Patient() {
+    }
+
+    public Patient(String firstname, String lastname, String birthdate, String gender) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.birthdate = birthdate;
+        this.gender = gender;
+    }
+
     public int getId() {
         return id;
     }

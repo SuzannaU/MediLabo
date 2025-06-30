@@ -19,6 +19,16 @@ public class PatientDTO {
     private String address;
     private String phoneNumber;
 
+    public PatientDTO() {
+    }
+
+    public PatientDTO(String firstname, String lastname, String birthdate, String gender) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.birthdate = birthdate;
+        this.gender = gender;
+    }
+
     public String getFirstname() {
         return firstname;
     }
