@@ -24,11 +24,16 @@ public class Patient {
     public Patient() {
     }
 
-    public Patient(String firstname, String lastname, String birthdate, String gender) {
+    public Patient(int id, String firstname, String lastname, String birthdate, String gender) {
+        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.birthdate = birthdate;
         this.gender = gender;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {

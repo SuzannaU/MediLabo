@@ -14,7 +14,7 @@
     <div class="col-6 alert alert-secondary my-3" th:if="${newPatientError}">
         <p th:text="${newPatientError}"></p>
     </div>
-    <form th:action="@{/front-service/patients/add}" th:object="${patient}" method="post">
+    <form th:action="@{/patients/add}" th:object="${patient}" method="post">
         <div class="row mb-3">
             <label for="lastname" class="col-sm-2 col-form-label">Nom</label>
             <div class="col-4" id="lastname">
@@ -60,7 +60,7 @@
         </div>
         <div class="row">
             <div class="col-2">
-                <a class="btn btn-primary btn-sm" href="/front-service/patients">Annuler</a>
+                <a class="btn btn-primary btn-sm" href="/patients">Annuler</a>
             </div>
             <div class="col-2">
                 <button class="btn btn-primary btn-sm" type="submit">Créer</button>

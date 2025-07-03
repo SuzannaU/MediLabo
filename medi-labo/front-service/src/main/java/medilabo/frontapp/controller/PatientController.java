@@ -63,7 +63,7 @@ public class PatientController {
     public String addPatient(@Valid @ModelAttribute("patient") PatientDTO patientDTO, BindingResult result, Model model) {
         logger.info("PostMapping for /patients");
         if (!result.hasErrors() && patientService.createPatient(patientDTO)) {
-            return "redirect:" + customProperties.getBaseUrl() + "/patients";
+            return "redirect:/patients";
         } else {
             model.addAttribute("newPatientError", "Impossible de créer le Patient");
             model.addAttribute("patient", patientDTO);
@@ -89,7 +89,7 @@ public class PatientController {
     public String updatePatient(@PathVariable("id") int id, @Valid @ModelAttribute("patient") Patient patient, BindingResult result, Model model) {
         logger.info("PostMapping for /patients/edit/{}", id);
         if (!result.hasErrors() && patientService.updatePatient(id, patient)) {
-            return "redirect:" + customProperties.getBaseUrl() + "/patients/" + id;
+            return "redirect:/patients/" + id;
         } else {
             model.addAttribute("updatePatientError", "Impossible de modifier le Patient");
             model.addAttribute("patient", patient);
@@ -101,7 +101,7 @@ public class PatientController {
     public String deletePatient(@PathVariable("id") int id, Model model) {
         logger.info("PostMapping for /patients/delete/{}", id);
         if (patientService.deletePatient(id)) {
-            return "redirect:" + customProperties.getBaseUrl() + "/patients";
+            return "redirect:/patients";
         } else {
             logger.error("Patient with id {} not found", id);
             List<Patient> patients = patientService.getAllPatients();
