@@ -12,12 +12,12 @@
 <div class="container">
     <div class="row">
         <div class="col-12 text-right">
-            <a href="/front-service">Accueil</a> | <a href="/front-service/login">Se connecter</a>
+            <a href="/">Accueil</a> | <a href="/login">Se connecter</a>
         </div>
         <h2>Liste des patients</h2>
         <div class="row">
             <div class="col-2">
-                <a href="/front-service/patients/add" class="btn btn-primary btn-sm">Ajouter un patient</a>
+                <a href="/patients/add" class="btn btn-primary btn-sm">Ajouter un patient</a>
             </div>
         </div>
         <div class="col-6 alert alert-secondary my-3" th:if="${emptyListError}" th:text="${emptyListError}">
@@ -41,17 +41,17 @@
                 <div class="col-3">
                     <div class="row">
                         <div class="col-4">
-                            <a th:href="@{/front-service/patients/{id}(id=${patient.id})}">
+                            <a th:href="@{/patients/{id}(id=${patient.id})}">
                                 <i class="bi bi-eye fs-3" title="Voir détails"></i>
                             </a>
                         </div>
                         <div class="col-4">
-                            <a th:href="@{/front-service/patients/edit/{id}(id=${patient.id})}">
+                            <a th:href="@{/patients/edit/{id}(id=${patient.id})}">
                                 <i class="bi bi-pencil fs-3" title="Modifier"></i>
                             </a>
                         </div>
                         <div class="col-4">
-                            <form th:action="@{/front-service/patients/delete/{id}(id=${patient.id})}" method="post"
+                            <form th:action="@{/patients/delete/{id}(id=${patient.id})}" method="post"
                                   onclick="return confirm('Confirmer la suppression ?');">
                                 <button type="submit" class="btn btn-link border-0 bg-transparent p-0">
                                     <i class="bi bi-trash fs-3" title="Supprimer"></i>

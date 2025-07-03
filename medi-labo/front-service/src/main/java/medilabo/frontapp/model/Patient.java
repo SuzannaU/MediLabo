@@ -31,6 +31,10 @@ public class Patient {
         this.gender = gender;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
