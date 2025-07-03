@@ -18,11 +18,9 @@ import java.util.List;
 public class PatientController {
     private final Logger logger = LoggerFactory.getLogger(PatientController.class);
 
-    private final CustomProperties customProperties;
     private final PatientService patientService;
 
-    public PatientController(CustomProperties customProperties, PatientService patientService) {
-        this.customProperties = customProperties;
+    public PatientController(PatientService patientService) {
         this.patientService = patientService;
     }
 

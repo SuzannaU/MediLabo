@@ -24,8 +24,7 @@ public class Patient {
     public Patient() {
     }
 
-    public Patient(int id, String firstname, String lastname, String birthdate, String gender) {
-        this.id = id;
+    public Patient(String firstname, String lastname, String birthdate, String gender) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.birthdate = birthdate;

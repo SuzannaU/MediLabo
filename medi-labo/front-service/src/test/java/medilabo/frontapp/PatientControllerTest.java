@@ -37,8 +37,8 @@ public class PatientControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private CustomProperties customProperties;
+//    @Autowired
+//    private CustomProperties customProperties;
 
     @MockitoBean
     private PatientService patientService;
@@ -143,7 +143,7 @@ public class PatientControllerTest {
 
         mockMvc.perform(post("/patients/add").flashAttr("patient", validPatientDTO))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(customProperties.getBaseUrl() + "/patients"));
+                .andExpect(redirectedUrl("/patients"));
 
         verify(patientService).createPatient(any(PatientDTO.class));
     }
@@ -206,7 +206,7 @@ public class PatientControllerTest {
 
         mockMvc.perform(post("/patients/edit/" + id).flashAttr("patient", validPatient))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(customProperties.getBaseUrl() + "/patients/" + id));
+                .andExpect(redirectedUrl("/patients/" + id));
     }
 
     @Test
@@ -242,7 +242,7 @@ public class PatientControllerTest {
 
         mockMvc.perform(post("/patients/delete/1"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(customProperties.getBaseUrl() + "/patients"));
+                .andExpect(redirectedUrl("/patients"));
 
         verify(patientService).deletePatient(anyInt());
     }
@@ -258,5 +258,4 @@ public class PatientControllerTest {
 
         verify(patientService).deletePatient(anyInt());
     }
-
 }
