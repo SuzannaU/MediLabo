@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +60,7 @@ public class PatientServiceTest {
 
     @Test
     public void addPatient_shouldCallRepoAndReturnPatient() {
-        Patient patient = new Patient("firstname", "lastname", "birthdate", "gender");
+        Patient patient = new Patient("firstname", "lastname", LocalDate.now(), "gender");
         when(patientRepo.save(any(Patient.class))).thenReturn(patient);
 
         Patient savedPatient = patientService.addPatient(patient);
@@ -70,7 +71,7 @@ public class PatientServiceTest {
 
     @Test
     public void updatePatient_shouldCallRepoAndReturnPatient() {
-        Patient patient = new Patient("firstname", "lastname", "birthdate", "gender");
+        Patient patient = new Patient("firstname", "lastname", LocalDate.now(), "gender");
         when(patientRepo.save(any(Patient.class))).thenReturn(patient);
 
         Patient updatedPatient = patientService.updatePatient(patient);
@@ -81,7 +82,7 @@ public class PatientServiceTest {
 
     @Test
     public void deletePatient_shouldCallRepo() {
-        Patient patient = new Patient("firstname", "lastname", "birthdate", "gender");
+        Patient patient = new Patient("firstname", "lastname", LocalDate.now(), "gender");
         doNothing().when(patientRepo).delete(any(Patient.class));
 
         patientService.deletePatient(patient);

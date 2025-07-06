@@ -1,0 +1,4 @@
+.row.mb-3.required .form-label:after {
+    content:"*";
+    color:red;
+}

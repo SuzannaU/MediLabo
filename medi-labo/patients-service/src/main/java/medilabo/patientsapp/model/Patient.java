@@ -2,6 +2,11 @@ package medilabo.patientsapp.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "patients")
@@ -17,8 +22,9 @@ public class Patient {
     @NotBlank(message="lastname must not be blank")
     private String lastname;
 
-    @NotBlank(message="birthdate must not be blank, and must be under 20 characters")
-    private String birthdate;
+    @NotNull
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private LocalDate birthdate;
 
     @NotBlank(message="gender must be M or F")
     private String gender;
@@ -29,7 +35,7 @@ public class Patient {
     public Patient() {
     }
 
-    public Patient(String firstname, String lastname, String birthdate, String gender) {
+    public Patient(String firstname, String lastname, LocalDate birthdate, String gender) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.birthdate = birthdate;
@@ -56,11 +62,11 @@ public class Patient {
         this.lastname = lastName;
     }
 
-    public String getBirthdate() {
+    public LocalDate getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(String birthdate) {
+    public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
 

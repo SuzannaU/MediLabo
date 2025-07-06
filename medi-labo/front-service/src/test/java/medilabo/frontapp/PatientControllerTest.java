@@ -14,10 +14,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -37,9 +39,6 @@ public class PatientControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-//    @Autowired
-//    private CustomProperties customProperties;
-
     @MockitoBean
     private PatientService patientService;
 
@@ -49,7 +48,7 @@ public class PatientControllerTest {
     @BeforeEach
     public void beforeEach() {
         validPatientDTO = new PatientDTO("firstname", "lastname", "birthdate", "g");
-        validPatient = new Patient("firstname", "lastname", "birthdate", "g");
+        validPatient = new Patient("firstname", "lastname", new Date(), "g");
 
     }
 
@@ -68,15 +67,14 @@ public class PatientControllerTest {
 
     private static Stream<Arguments> invalidPatientProvider() {
         return Stream.of(
-                Arguments.of(new Patient(null, "lastname", "birthdate", "g")),
-                Arguments.of(new Patient("firstname", null, "birthdate", "g")),
+                Arguments.of(new Patient(null, "lastname", new Date(), "g")),
+                Arguments.of(new Patient("firstname", null, new Date(), "g")),
                 Arguments.of(new Patient("firstname", "lastname", null, "g")),
-                Arguments.of(new Patient("firstname", "lastname", "birthdate", null)),
-                Arguments.of(new Patient("", "lastname", "birthdate", "g")),
-                Arguments.of(new Patient("firstname", "", "birthdate", "g")),
-                Arguments.of(new Patient("firstname", "lastname", "", "g")),
-                Arguments.of(new Patient("firstname", "lastname", "birthdate", "")),
-                Arguments.of(new Patient("firstname", "lastname", "birthdate", "gender")));
+                Arguments.of(new Patient("firstname", "lastname", new Date(), null)),
+                Arguments.of(new Patient("", "lastname", new Date(), "g")),
+                Arguments.of(new Patient("firstname", "", new Date(), "g")),
+                Arguments.of(new Patient("firstname", "lastname", new Date(), "")),
+                Arguments.of(new Patient("firstname", "lastname", new Date(), "gender")));
     }
 
     @ParameterizedTest

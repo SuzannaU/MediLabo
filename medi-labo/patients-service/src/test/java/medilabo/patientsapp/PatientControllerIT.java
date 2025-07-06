@@ -2,6 +2,8 @@ package medilabo.patientsapp;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
 import medilabo.patientsapp.model.Patient;
 import medilabo.patientsapp.repository.PatientRepo;
@@ -18,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -38,22 +41,27 @@ public class PatientControllerIT {
     private PatientRepo patientRepo;
 
     private Patient validPatient;
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void setup() {
-        validPatient = new Patient("firstname", "lastname", "birthdate", "g");
+        validPatient = new Patient("firstname", "lastname", LocalDate.now(), "g");
+
+        //Allow Jackson to parse the LocalDate
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
     private static Stream<Arguments> invalidPatientProvider() {
         return Stream.of(
-                Arguments.of(new Patient(null, "lastname", "birthdate", "g")),
-                Arguments.of(new Patient("firstname", null, "birthdate", "g")),
+                Arguments.of(new Patient(null, "lastname", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", null, LocalDate.now(), "g")),
                 Arguments.of(new Patient("firstname", "lastname", null, "g")),
-                Arguments.of(new Patient("firstname", "lastname", "birthdate", null)),
-                Arguments.of(new Patient("", "lastname", "birthdate", "g")),
-                Arguments.of(new Patient("firstname", "", "birthdate", "g")),
-                Arguments.of(new Patient("firstname", "lastname", "", "g")),
-                Arguments.of(new Patient("firstname", "lastname", "birthdate", ""))
+                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), null)),
+                Arguments.of(new Patient("", "lastname", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", "", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), ""))
         );
     }
 
@@ -66,7 +74,7 @@ public class PatientControllerIT {
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
-        List<Patient> resultPatients = new ObjectMapper()
+        List<Patient> resultPatients = objectMapper
                 .readValue(resultContent, new TypeReference<List<Patient>>() {
                 });
 
@@ -97,7 +105,7 @@ public class PatientControllerIT {
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
-        Patient resultPatient = new ObjectMapper()
+        Patient resultPatient = objectMapper
                 .readValue(resultContent, new TypeReference<Patient>() {
                 });
 
@@ -124,12 +132,12 @@ public class PatientControllerIT {
         MvcResult result = mockMvc
                 .perform(post("/patients")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(validPatient)))
+                        .content(objectMapper.writeValueAsString(validPatient)))
                 .andExpect(status().isCreated())
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
-        Patient resultPatient = new ObjectMapper()
+        Patient resultPatient = objectMapper
                 .readValue(resultContent, new TypeReference<Patient>() {
                 });
 
@@ -143,13 +151,13 @@ public class PatientControllerIT {
         MvcResult result = mockMvc
                 .perform(post("/patients")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(invalidPatient)))
+                        .content(objectMapper.writeValueAsString(invalidPatient)))
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
 
-        assertTrue(resultContent.isEmpty());
+        assertEquals("Validation error", resultContent);
     }
 
     @Test
@@ -158,12 +166,12 @@ public class PatientControllerIT {
         MvcResult result = mockMvc
                 .perform(put("/patients/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(validPatient)))
+                        .content(objectMapper.writeValueAsString(validPatient)))
                 .andExpect(status().isOk())
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
-        Patient resultPatient = new ObjectMapper()
+        Patient resultPatient = objectMapper
                 .readValue(resultContent, new TypeReference<Patient>() {
                 });
 
@@ -177,13 +185,13 @@ public class PatientControllerIT {
         MvcResult result = mockMvc
                 .perform(put("/patients/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(invalidPatient)))
+                        .content(objectMapper.writeValueAsString(invalidPatient)))
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
 
-        assertTrue(resultContent.isEmpty());
+        assertEquals("Validation error", resultContent);
     }
 
     @Test

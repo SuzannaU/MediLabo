@@ -35,7 +35,7 @@ public class PatientService {
             logger.error("Problem retrieving patients. Error: {} ", statusCode);
             return null;
         } catch (FeignException ex) {
-            logger.error("Problem retrieving patients. Error: {} ", ex.status());
+            logger.error("Problem retrieving patients.", ex);
             return null;
         }
     }
@@ -72,7 +72,7 @@ public class PatientService {
             }
             return false;
         } catch (FeignException e) {
-            logger.error("Error: creating patient unsuccessful");
+            logger.error("Error: creating patient unsuccessful", e);
             return false;
         }
     }
