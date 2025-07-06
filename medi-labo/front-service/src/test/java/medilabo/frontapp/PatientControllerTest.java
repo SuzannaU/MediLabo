@@ -3,7 +3,6 @@ package medilabo.frontapp;
 import medilabo.frontapp.config.CustomProperties;
 import medilabo.frontapp.controller.PatientController;
 import medilabo.frontapp.model.Patient;
-import medilabo.frontapp.model.PatientDTO;
 import medilabo.frontapp.service.PatientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,11 +13,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
@@ -43,38 +42,23 @@ public class PatientControllerTest {
     private PatientService patientService;
 
     private Patient validPatient;
-    private PatientDTO validPatientDTO;
 
     @BeforeEach
     public void beforeEach() {
-        validPatientDTO = new PatientDTO("firstname", "lastname", "birthdate", "g");
-        validPatient = new Patient("firstname", "lastname", new Date(), "g");
+        validPatient = new Patient("firstname", "lastname", LocalDate.now(), "g");
 
-    }
-
-    private static Stream<Arguments> invalidPatientDTOProvider() {
-        return Stream.of(
-                Arguments.of(new PatientDTO(null, "lastname", "birthdate", "g")),
-                Arguments.of(new PatientDTO("firstname", null, "birthdate", "g")),
-                Arguments.of(new PatientDTO("firstname", "lastname", null, "g")),
-                Arguments.of(new PatientDTO("firstname", "lastname", "birthdate", null)),
-                Arguments.of(new PatientDTO("", "lastname", "birthdate", "g")),
-                Arguments.of(new PatientDTO("firstname", "", "birthdate", "g")),
-                Arguments.of(new PatientDTO("firstname", "lastname", "", "g")),
-                Arguments.of(new PatientDTO("firstname", "lastname", "birthdate", "")),
-                Arguments.of(new PatientDTO("firstname", "lastname", "birthdate", "gender")));
     }
 
     private static Stream<Arguments> invalidPatientProvider() {
         return Stream.of(
-                Arguments.of(new Patient(null, "lastname", new Date(), "g")),
-                Arguments.of(new Patient("firstname", null, new Date(), "g")),
+                Arguments.of(new Patient(null, "lastname", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", null, LocalDate.now(), "g")),
                 Arguments.of(new Patient("firstname", "lastname", null, "g")),
-                Arguments.of(new Patient("firstname", "lastname", new Date(), null)),
-                Arguments.of(new Patient("", "lastname", new Date(), "g")),
-                Arguments.of(new Patient("firstname", "", new Date(), "g")),
-                Arguments.of(new Patient("firstname", "lastname", new Date(), "")),
-                Arguments.of(new Patient("firstname", "lastname", new Date(), "gender")));
+                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), null)),
+                Arguments.of(new Patient("", "lastname", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", "", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), "")),
+                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), "gender")));
     }
 
     @ParameterizedTest
@@ -137,33 +121,33 @@ public class PatientControllerTest {
     @Test
     public void addPatient_shouldSAveAndRedirect() throws Exception {
 
-        when(patientService.createPatient(any(PatientDTO.class))).thenReturn(true);
+        when(patientService.createPatient(any(Patient.class))).thenReturn(true);
 
-        mockMvc.perform(post("/patients/add").flashAttr("patient", validPatientDTO))
+        mockMvc.perform(post("/patients/add").flashAttr("patient", validPatient))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/patients"));
 
-        verify(patientService).createPatient(any(PatientDTO.class));
+        verify(patientService).createPatient(any(Patient.class));
     }
 
     @Test
     public void addPatient_withError_shouldReturnFormWithError() throws Exception {
 
-        when(patientService.createPatient(any(PatientDTO.class))).thenReturn(false);
+        when(patientService.createPatient(any(Patient.class))).thenReturn(false);
 
-        mockMvc.perform(post("/patients/add").flashAttr("patient", validPatientDTO))
+        mockMvc.perform(post("/patients/add").flashAttr("patient", validPatient))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("patient-form"))
                 .andExpect(model().attributeExists("newPatientError", "patient"));
 
-        verify(patientService).createPatient(any(PatientDTO.class));
+        verify(patientService).createPatient(any(Patient.class));
     }
 
     @ParameterizedTest
-    @MethodSource("invalidPatientDTOProvider")
-    public void addPatient_withInvalidPatient_shouldReturnFormWithError(PatientDTO invalidPatientDTO) throws Exception {
+    @MethodSource("invalidPatientProvider")
+    public void addPatient_withInvalidPatient_shouldReturnFormWithError(Patient invalidPatient) throws Exception {
 
-        mockMvc.perform(post("/patients/add").flashAttr("patient", invalidPatientDTO))
+        mockMvc.perform(post("/patients/add").flashAttr("patient", invalidPatient))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("patient-form"))
                 .andExpect(model().attributeExists("newPatientError", "patient"));

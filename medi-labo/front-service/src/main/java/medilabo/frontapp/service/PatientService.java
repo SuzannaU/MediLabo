@@ -2,7 +2,6 @@ package medilabo.frontapp.service;
 
 import feign.FeignException;
 import medilabo.frontapp.model.Patient;
-import medilabo.frontapp.model.PatientDTO;
 import medilabo.frontapp.proxy.PatientProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +58,7 @@ public class PatientService {
         }
     }
 
-    public boolean createPatient(PatientDTO patient) {
+    public boolean createPatient(Patient patient) {
         try {
             ResponseEntity<Patient> response = patientProxy.createPatient(patient);
             int statusCode = response.getStatusCode().value();
