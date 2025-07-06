@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name = "patients")
@@ -16,17 +15,17 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotBlank(message="firstname must not be blank")
+    @NotBlank(message = "firstname must not be blank")
     private String firstname;
 
-    @NotBlank(message="lastname must not be blank")
+    @NotBlank(message = "lastname must not be blank")
     private String lastname;
 
     @NotNull
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthdate;
 
-    @NotBlank(message="gender must be M or F")
+    @NotBlank(message = "gender must be M or F")
     private String gender;
 
     private String address;

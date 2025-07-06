@@ -8,16 +8,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
+/**
+ * Controller that handles requests related to Patient type.
+ * It calls methods form PatientService
+ *
+ * @see PatientService
+ */
 @RestController
 @RequestMapping("/patients")
 @Validated
@@ -30,11 +32,22 @@ public class PatientController {
         this.patientService = patientService;
     }
 
+    /**
+     * Handles MethodArgumentNotValidException for the whole Controller
+     *
+     * @param e the thrown exception
+     * @return ResponseEntity with 404 and error message
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleNotValidException(MethodArgumentNotValidException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Validation error");
     }
 
+    /**
+     * Gets the List of all patients.
+     *
+     * @return  a ResponseEntity containing the List with 200 code, or with 204 if there are no Patients
+     */
     @GetMapping
     public ResponseEntity<List<Patient>> getAllPatients() {
         logger.info("GetMapping for /patients");
@@ -45,6 +58,12 @@ public class PatientController {
         return new ResponseEntity<>(patients, HttpStatus.OK);
     }
 
+    /**
+     * Gets patient by id.
+     *
+     * @param id the id
+     * @return  ResponseEntity with the patient and 200, or ResponseEntity with 404 if no patient is found with this id
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Patient> getPatientById(@PathVariable("id") int id) {
         logger.info("GetMapping for /patients/{}", id);
@@ -55,6 +74,12 @@ public class PatientController {
         }
     }
 
+    /**
+     * Registers a new Patient.
+     *
+     * @param patient the patient
+     * @return ResponseEntity with the saved patient and 201 code, or ResponseEntity with 500 if an exception occurs
+     */
     @PostMapping
     public ResponseEntity<Patient> registerPatient(@RequestBody @Valid Patient patient) {
         logger.info("PostMapping for /patients");
@@ -66,6 +91,13 @@ public class PatientController {
         }
     }
 
+    /**
+     * Updates an existing patient.
+     *
+     * @param id      the id of the existing patient
+     * @param patient the patient with data to update
+     * @return ResponseEntity with the updated patient and 200 code, or ResponseEntity with 500 if an Exception occurs
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Patient> updatePatient(@PathVariable("id") int id, @RequestBody @Valid Patient patient) {
         logger.info("PutMapping for /patients/{}", id);
@@ -77,6 +109,12 @@ public class PatientController {
         }
     }
 
+    /**
+     * Deletes a patient.
+     *
+     * @param id the id of the patient to be deleted
+     * @return ResponseEntity with 200 code, or ResponseEntity with 404 if no Patient is found with this id
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Patient> deletePatient(@PathVariable("id") int id) {
         logger.info("DeleteMapping for /patients/{}", id);
