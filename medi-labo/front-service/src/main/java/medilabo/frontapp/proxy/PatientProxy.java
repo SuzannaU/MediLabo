@@ -2,7 +2,6 @@ package medilabo.frontapp.proxy;
 
 import medilabo.frontapp.config.FeignConfig;
 import medilabo.frontapp.model.Patient;
-import medilabo.frontapp.model.PatientDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
@@ -21,7 +20,7 @@ public interface PatientProxy {
     ResponseEntity<Patient> getPatient(@PathVariable("id") int id);
 
     @PostMapping("/patients-service/patients")
-    ResponseEntity<Patient> createPatient(@RequestBody PatientDTO patient);
+    ResponseEntity<Patient> createPatient(@RequestBody Patient patient);
 
     @PutMapping("/patients-service/patients/{id}")
     ResponseEntity<Patient> updatePatient(@PathVariable("id") int id, @RequestBody Patient patient);

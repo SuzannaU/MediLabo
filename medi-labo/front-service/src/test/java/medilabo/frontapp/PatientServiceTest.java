@@ -2,7 +2,6 @@ package medilabo.frontapp;
 
 import feign.FeignException;
 import medilabo.frontapp.model.Patient;
-import medilabo.frontapp.model.PatientDTO;
 import medilabo.frontapp.proxy.PatientProxy;
 import medilabo.frontapp.service.PatientService;
 import org.junit.jupiter.api.Test;
@@ -100,31 +99,31 @@ public class PatientServiceTest {
     @Test
     public void createPatient_shouldReturnTrue(){
 
-        when(patientProxy.createPatient(any(PatientDTO.class)))
+        when(patientProxy.createPatient(any(Patient.class)))
                 .thenReturn(new ResponseEntity<>(new Patient(), HttpStatus.CREATED));
 
-        assertTrue(patientService.createPatient(new PatientDTO()));
-        verify(patientProxy).createPatient(any(PatientDTO.class));
+        assertTrue(patientService.createPatient(new Patient()));
+        verify(patientProxy).createPatient(any(Patient.class));
     }
 
     @Test
     public void createPatient_withBadRequest_shouldReturnFalse(){
 
-        when(patientProxy.createPatient(any(PatientDTO.class)))
+        when(patientProxy.createPatient(any(Patient.class)))
                 .thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
 
-        assertFalse(patientService.createPatient(new PatientDTO()));
-        verify(patientProxy).createPatient(any(PatientDTO.class));
+        assertFalse(patientService.createPatient(new Patient()));
+        verify(patientProxy).createPatient(any(Patient.class));
     }
 
     @Test
     public void createPatient_withException_shouldReturnFalse(){
 
-        when(patientProxy.createPatient(any(PatientDTO.class)))
+        when(patientProxy.createPatient(any(Patient.class)))
                 .thenThrow(new TestFeignException());
 
-        assertFalse(patientService.createPatient(new PatientDTO()));
-        verify(patientProxy).createPatient(any(PatientDTO.class));
+        assertFalse(patientService.createPatient(new Patient()));
+        verify(patientProxy).createPatient(any(Patient.class));
     }
 
     @Test

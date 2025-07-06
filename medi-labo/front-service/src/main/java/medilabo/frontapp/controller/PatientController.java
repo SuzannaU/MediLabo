@@ -1,9 +1,7 @@
 package medilabo.frontapp.controller;
 
 import jakarta.validation.Valid;
-import medilabo.frontapp.config.CustomProperties;
 import medilabo.frontapp.model.Patient;
-import medilabo.frontapp.model.PatientDTO;
 import medilabo.frontapp.service.PatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,18 +51,18 @@ public class PatientController {
     @GetMapping("/patients/add")
     public String getNewPatientForm(Model model) {
         logger.info("GetMapping for /patients/add");
-        model.addAttribute("patient", new PatientDTO());
+        model.addAttribute("patient", new Patient());
         return "patient-form";
     }
 
     @PostMapping("/patients/add")
-    public String addPatient(@Valid @ModelAttribute("patient") PatientDTO patientDTO, BindingResult result, Model model) {
+    public String addPatient(@Valid @ModelAttribute("patient") Patient patient, BindingResult result, Model model) {
         logger.info("PostMapping for /patients");
-        if (!result.hasErrors() && patientService.createPatient(patientDTO)) {
+        if (!result.hasErrors() && patientService.createPatient(patient)) {
             return "redirect:/patients";
         } else {
             model.addAttribute("newPatientError", "Impossible de créer le Patient");
-            model.addAttribute("patient", patientDTO);
+            model.addAttribute("patient", patient);
             return "patient-form";
         }
     }

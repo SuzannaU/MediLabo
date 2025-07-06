@@ -2,7 +2,6 @@ package medilabo.frontapp.service;
 
 import feign.FeignException;
 import medilabo.frontapp.model.Patient;
-import medilabo.frontapp.model.PatientDTO;
 import medilabo.frontapp.proxy.PatientProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +34,7 @@ public class PatientService {
             logger.error("Problem retrieving patients. Error: {} ", statusCode);
             return null;
         } catch (FeignException ex) {
-            logger.error("Problem retrieving patients. Error: {} ", ex.status());
+            logger.error("Problem retrieving patients.", ex);
             return null;
         }
     }
@@ -59,7 +58,7 @@ public class PatientService {
         }
     }
 
-    public boolean createPatient(PatientDTO patient) {
+    public boolean createPatient(Patient patient) {
         try {
             ResponseEntity<Patient> response = patientProxy.createPatient(patient);
             int statusCode = response.getStatusCode().value();
@@ -72,7 +71,7 @@ public class PatientService {
             }
             return false;
         } catch (FeignException e) {
-            logger.error("Error: creating patient unsuccessful");
+            logger.error("Error: creating patient unsuccessful", e);
             return false;
         }
     }
