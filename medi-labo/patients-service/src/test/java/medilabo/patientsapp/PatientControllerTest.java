@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import medilabo.patientsapp.config.CustomProperties;
+import medilabo.patientsapp.config.SecurityConfig;
 import medilabo.patientsapp.controller.PatientController;
 import medilabo.patientsapp.exceptions.NonExistingPatientException;
 import medilabo.patientsapp.model.Patient;
@@ -15,7 +17,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = PatientController.class)
 @ActiveProfiles("test")
+@Import({SecurityConfig.class, CustomProperties.class})
 public class PatientControllerTest {
 
     @Autowired
@@ -45,6 +50,9 @@ public class PatientControllerTest {
 
     private Patient patient;
     private ObjectMapper objectMapper;
+
+    private final String username="${medilabo.user.username}";
+    private final String password="${medilabo.user.password}";
 
     @BeforeEach
     public void beforeEach() {
@@ -69,6 +77,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void getAllPatients_shouldReturnPatientsAndOk() throws Exception {
         when(patientService.getAllPatients()).thenReturn(List.of(new Patient()));
 
@@ -87,6 +96,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void getAllPatients_withNoPatients_shouldReturnNoContent() throws Exception {
         when(patientService.getAllPatients()).thenReturn(new ArrayList<>());
 
@@ -102,6 +112,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void getPatientById_shouldReturnPatientAndOk() throws Exception {
         when(patientService.getPatientById(anyInt())).thenReturn(new Patient());
 
@@ -119,6 +130,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void getPatientById_withException_shouldReturnNotFound() throws Exception {
         when(patientService.getPatientById(anyInt())).thenThrow(new NonExistingPatientException());
 
@@ -134,6 +146,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void registerPatient_shouldReturnPatientAndCreated() throws Exception {
         when(patientService.addPatient(any(Patient.class))).thenReturn(patient);
 
@@ -154,6 +167,7 @@ public class PatientControllerTest {
 
     @ParameterizedTest
     @MethodSource("invalidPatientProvider")
+    @WithMockUser(username=username, password=password)
     public void registerPatient_withValidationException_shouldReturnBadRequest(Patient invalidPatient) throws Exception {
 
         MvcResult result = mockMvc
@@ -169,6 +183,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void registerPatient_withException_shouldReturnInternalServerError() throws Exception {
         when(patientService.addPatient(any(Patient.class))).thenThrow(new RuntimeException());
 
@@ -186,6 +201,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void updatePatient_shouldReturnPatientAndOK() throws Exception {
         when(patientService.updatePatient(any(Patient.class))).thenReturn(patient);
 
@@ -206,6 +222,7 @@ public class PatientControllerTest {
 
     @ParameterizedTest
     @MethodSource("invalidPatientProvider")
+    @WithMockUser(username=username, password=password)
     public void updatePatient_withValidationException_shouldBadRequest(Patient invalidPatient) throws Exception {
 
         MvcResult result = mockMvc
@@ -221,6 +238,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void updatePatient_withException_shouldInternalServerError() throws Exception {
         when(patientService.updatePatient(any(Patient.class))).thenThrow(new RuntimeException());
 
@@ -238,6 +256,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void deletePatient_shouldReturnOk() throws Exception {
         when(patientService.getPatientById(anyInt())).thenReturn(new Patient());
         doNothing().when(patientService).deletePatient(any(Patient.class));
@@ -249,6 +268,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void deletePatient_withException_shouldReturnNotFound() throws Exception {
         when(patientService.getPatientById(anyInt())).thenReturn(new Patient());
         doThrow(new NonExistingPatientException()).when(patientService).deletePatient(any(Patient.class));

@@ -1,5 +1,6 @@
 package medilabo.patientsapp.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -15,6 +16,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Autowired
+    private CustomProperties customProperties;
 
     /**
      * Security Filter Chain that sets up the authentication policy, and implements HTTP Basic authentication. It also disables CSRF protection since this service will only receive calls from the gateway service.
@@ -39,8 +43,8 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder().encode("password"))
+                .username(customProperties.getUsername())
+                .password(passwordEncoder().encode(customProperties.getPassword()))
                 .build();
         return new InMemoryUserDetailsManager(user);
     }

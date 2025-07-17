@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
+import medilabo.patientsapp.config.CustomProperties;
+import medilabo.patientsapp.config.SecurityConfig;
 import medilabo.patientsapp.model.Patient;
 import medilabo.patientsapp.repository.PatientRepo;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +17,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -30,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Import({SecurityConfig.class, CustomProperties.class})
 @AutoConfigureMockMvc
 @Transactional
 public class PatientControllerIT {
@@ -42,6 +47,9 @@ public class PatientControllerIT {
 
     private Patient validPatient;
     private ObjectMapper objectMapper;
+
+    private final String username="${medilabo.user.username}";
+    private final String password="${medilabo.user.password}";
 
     @BeforeEach
     public void setup() {
@@ -66,6 +74,7 @@ public class PatientControllerIT {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void getAllPatients_shouldReturnPatientsAndOk() throws Exception {
 
         MvcResult result = mockMvc
@@ -82,6 +91,7 @@ public class PatientControllerIT {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void getAllPatients_withNoPatients_shouldReturnNoContent() throws Exception {
 
         patientRepo.deleteAll();
@@ -97,6 +107,7 @@ public class PatientControllerIT {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void getPatientById_shouldReturnPatientAndOk() throws Exception {
 
         MvcResult result = mockMvc
@@ -114,6 +125,7 @@ public class PatientControllerIT {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void getPatientById_withBadId_shouldReturnNotFound() throws Exception {
 
         MvcResult result = mockMvc
@@ -127,6 +139,7 @@ public class PatientControllerIT {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void registerPatient_shouldReturnPatientAndCreated() throws Exception {
 
         MvcResult result = mockMvc
@@ -146,6 +159,7 @@ public class PatientControllerIT {
 
     @ParameterizedTest
     @MethodSource("invalidPatientProvider")
+    @WithMockUser(username=username, password=password)
     public void registerPatient_withInvalidPatient_shouldReturnBadRequest(Patient invalidPatient) throws Exception {
 
         MvcResult result = mockMvc
@@ -161,6 +175,7 @@ public class PatientControllerIT {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void updatePatient_shouldReturnPatientAndOK() throws Exception {
 
         MvcResult result = mockMvc
@@ -180,6 +195,7 @@ public class PatientControllerIT {
 
     @ParameterizedTest
     @MethodSource("invalidPatientProvider")
+    @WithMockUser(username=username, password=password)
     public void updatePatient_withInvalidPatient_shouldReturnBadRequest(Patient invalidPatient) throws Exception {
 
         MvcResult result = mockMvc
@@ -195,6 +211,7 @@ public class PatientControllerIT {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void deletePatient_shouldDeletePatientAndReturnOk() throws Exception {
 
         int id = 1;
@@ -205,6 +222,7 @@ public class PatientControllerIT {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void deletePatient_withInvalidId_shouldReturnNotFound() throws Exception {
 
         mockMvc.perform(delete("/patients/123456789"))
