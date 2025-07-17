@@ -38,9 +38,11 @@ public class SecurityConfig {
      */
     @Bean
     public UserDetailsService userDetailsService() {
+        String username = "${medilabo.user.username}";
+        String password = "${medilabo.user.password}";
         UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder().encode("password"))
+                .username(username)
+                .password(passwordEncoder().encode(password))
                 .build();
         return new InMemoryUserDetailsManager(user);
     }

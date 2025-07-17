@@ -17,9 +17,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private CustomProperties customProperties;
-
     /**
      * Security Filter Chain that sets up the authentication policy, and implements HTTP Basic authentication. It also disables CSRF protection since this service will only receive calls from the gateway service.
      * @param http HttpSecurity object
@@ -42,9 +39,11 @@ public class SecurityConfig {
      */
     @Bean
     public UserDetailsService userDetailsService() {
+        String username = "${medilabo.user.username}";
+        String password = "${medilabo.user.password}";
         UserDetails user = User.builder()
-                .username(customProperties.getUsername())
-                .password(passwordEncoder().encode(customProperties.getPassword()))
+                .username(username)
+                .password(passwordEncoder().encode(password))
                 .build();
         return new InMemoryUserDetailsManager(user);
     }

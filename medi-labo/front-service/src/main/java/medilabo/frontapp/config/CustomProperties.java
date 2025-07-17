@@ -4,24 +4,24 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix="medilabo.frontapp")
+@ConfigurationProperties(prefix="medilabo.user")
 public class CustomProperties {
-    private String baseUrl;
-    private String gatewayPort;
+    private String username;
+    private String password;
 
-    public String getGatewayPort() {
-        return gatewayPort;
+    public String getUsername() {
+        return username;
     }
 
-    public void setGatewayPort(String gatewayPort) {
-        this.gatewayPort = gatewayPort;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getBaseUrl() {
-        return baseUrl;
+    public String getPassword() {
+        return password;
     }
 
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

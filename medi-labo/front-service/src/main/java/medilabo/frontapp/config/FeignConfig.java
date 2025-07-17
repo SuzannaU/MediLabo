@@ -28,11 +28,14 @@ public class FeignConfig implements RequestInterceptor {
 
     /**
      * Override of the apply method from RequestInterceptor, adding Authorization header to requests
+     *
      * @param requestTemplate
      */
     @Override
     public void apply(RequestTemplate requestTemplate) {
-        String auth = "user:password";
+        String username = "${medilabo.user.username}";
+        String password = "${medilabo.user.password}";
+        String auth = username + ":" + password;
         byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes());
         String authHeader = "Basic " + new String(encodedAuth);
         requestTemplate.header("Authorization", authHeader);
