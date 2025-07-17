@@ -10,6 +10,12 @@ spring:
           forwarded:
             enabled: true
 #          routes:
+#            - id: patients-service
+#              uri: lb://patients-service
+#              predicates:
+#                - Path=/patients-service/**
+#              filters:
+#                - AddRequestHeader=Authorization, Basic dXNlcjpwYXNzd29yZA==
 #            - id : front-service
 #              uri: lb://front-service
 #              predicates:

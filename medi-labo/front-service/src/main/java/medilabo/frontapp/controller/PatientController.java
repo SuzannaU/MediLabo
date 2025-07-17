@@ -22,7 +22,7 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    @GetMapping(value = {"/patients", "", "/"})
+    @GetMapping(value = {"/patients"})
     public String getPatients(Model model) {
         logger.info("GetMapping for /patients");
         List<Patient> patients = patientService.getAllPatients();
@@ -52,7 +52,7 @@ public class PatientController {
     public String getNewPatientForm(Model model) {
         logger.info("GetMapping for /patients/add");
         model.addAttribute("patient", new Patient());
-        return "patient-form";
+        return "add-patient";
     }
 
     @PostMapping("/patients/add")
@@ -63,7 +63,7 @@ public class PatientController {
         } else {
             model.addAttribute("newPatientError", "Impossible de créer le Patient");
             model.addAttribute("patient", patient);
-            return "patient-form";
+            return "add-patient";
         }
     }
 

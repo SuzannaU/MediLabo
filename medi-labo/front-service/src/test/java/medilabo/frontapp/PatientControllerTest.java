@@ -137,7 +137,7 @@ public class PatientControllerTest {
 
         mockMvc.perform(post("/patients/add").flashAttr("patient", validPatient))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("patient-form"))
+                .andExpect(view().name("add-patient"))
                 .andExpect(model().attributeExists("newPatientError", "patient"));
 
         verify(patientService).createPatient(any(Patient.class));
@@ -149,7 +149,7 @@ public class PatientControllerTest {
 
         mockMvc.perform(post("/patients/add").flashAttr("patient", invalidPatient))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("patient-form"))
+                .andExpect(view().name("add-patient"))
                 .andExpect(model().attributeExists("newPatientError", "patient"));
     }
 
