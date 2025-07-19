@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>medi-labo</groupId>
-	<artifactId>medi-labo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>medi-labo</groupId>
+    <artifactId>medi-labo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-	<name>medi-labo</name>
-	<description>Parent project</description>
-	<properties>
-		<java.version>17</java.version>
+    <name>medi-labo</name>
+    <description>Parent project</description>
+    <properties>
+        <java.version>17</java.version>
         <spring-boot.version>3.5.0</spring-boot.version>
         <jacoco.version>0.8.12</jacoco.version>
-	</properties>
+        <failsafe.version>3.5.3</failsafe.version>
+        <surefire.version>3.5.2</surefire.version>
+    </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -58,16 +60,56 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${failsafe.version}</version>
+                    <executions>
+                        <execution>
+                            <id>integration-tests</id>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
 
-<modules>
-    <module>front-service</module>
-    <module>gateway-service</module>
-    <module>notes-service</module>
-    <module>patients-service</module>
-    <module>registry-service</module>
-    <module>risks-service</module>
-</modules>
+    <profiles>
+        <profile>
+            <id>enable-reporting</id>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-report-plugin</artifactId>
+                        <version>${surefire.version}</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.version}</version>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>report</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+    </profiles>
+    <modules>
+        <module>front-service</module>
+        <module>gateway-service</module>
+        <module>notes-service</module>
+        <module>patients-service</module>
+        <module>registry-service</module>
+        <module>risks-service</module>
+    </modules>
 </project>

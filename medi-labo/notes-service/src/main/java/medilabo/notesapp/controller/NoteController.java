@@ -1,5 +1,6 @@
 package medilabo.notesapp.controller;
 
+import medilabo.notesapp.exceptions.NoteNotFoundException;
 import medilabo.notesapp.model.Note;
 import medilabo.notesapp.service.NoteService;
 import org.slf4j.Logger;
@@ -23,20 +24,22 @@ public class NoteController {
 
     @GetMapping("/{patientId}")
     public ResponseEntity<List<Note>> getNotesByPatientId(@PathVariable("patientId") int patientId) {
-        logger.info("GetMapping for /notes/{patientId}");
-        List<Note> notes =noteService.getNotesByPatientId(patientId);
-        if (notes.isEmpty()){
+        logger.info("GetMapping for /notes/{}", patientId);
+        try {
+            List<Note> notes = noteService.getNotesByPatientId(patientId);
+            logger.info("getNotesByPatientId returns {} notes", notes.size());
+            return new ResponseEntity<>(notes, HttpStatus.OK);
+        } catch (NoteNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(notes, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Note> addNote(@RequestBody Note note) {
         logger.info("PostMapping for /notes");
-        try{
+        try {
             return new ResponseEntity<>(noteService.addNote(note), HttpStatus.CREATED);
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error("Note was not created: {}", note.toString());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
