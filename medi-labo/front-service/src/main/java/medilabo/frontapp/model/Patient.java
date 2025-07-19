@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Patient {
 
@@ -23,6 +24,8 @@ public class Patient {
 
     private String address;
     private String phoneNumber;
+
+    private List<Note> notes;
 
     public Patient() {
     }
@@ -88,6 +91,14 @@ public class Patient {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public List<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
     }
 
     @Override

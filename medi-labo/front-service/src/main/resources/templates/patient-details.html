@@ -12,53 +12,67 @@
 <div class="container">
     <h2 th:text="${patient.firstname + ' ' + patient.lastname}"></h2>
     <div class="row">
-        <div class="col-4">
+        <div class="col-2">
             <p>Nom</p>
         </div>
         <div class="col-8" th:text="${patient.lastname}">
         </div>
     </div>
     <div class="row">
-        <div class="col-4">
+        <div class="col-2">
             <p>Prénom</p>
         </div>
         <div class="col-8" th:text="${patient.firstname}">
         </div>
     </div>
     <div class="row">
-        <div class="col-4">
+        <div class="col-2">
             <p>Date de naissance</p>
         </div>
         <div class="col-8" th:text="${patient.birthdate}">
         </div>
     </div>
     <div class="row">
-        <div class="col-4">
+        <div class="col-2">
             <p>Genre</p>
         </div>
         <div class="col-8" th:text="${patient.gender}">
         </div>
     </div>
     <div class="row">
-        <div class="col-4">
+        <div class="col-2">
             <p>Adresse</p>
         </div>
         <div class="col-8" th:text="${patient.address}">
         </div>
     </div>
     <div class="row">
-        <div class="col-4">
+        <div class="col-2">
             <p>Téléphone</p>
         </div>
         <div class="col-8" th:text="${patient.phoneNumber}">
         </div>
     </div>
-    <div class="row">
-        <div class="col-2">
+    <div class="row mb-3">
+        <div class="col-1">
             <a class="btn btn-primary btn-sm" href="/patients">Retour</a>
         </div>
-        <div class="col-2">
+        <div class="col-1">
             <a th:href="@{/patients/edit/{id}(id=${patient.id})}" class="btn btn-primary btn-sm">Modifier</a>
+        </div>
+        <div class="col-2">
+            <a th:href="@{/notes/add(id=${patient.id})}" class="btn btn-primary btn-sm">Ajouter une note</a>
+        </div>
+    </div>
+    <div class="col-6 alert alert-secondary my-3" th:if="${noNotesError}">
+        <p th:text="${noNotesError}"></p>
+    </div>
+    <div th:unless="${noNotesError}">
+        <h5>Notes :</h5>
+        <div class="card mt-3">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item" th:each="note : ${patient.notes}" th:text="${note.content}"></li>
+            </ul>
         </div>
     </div>
 </div>

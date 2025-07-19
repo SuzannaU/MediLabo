@@ -1,7 +1,9 @@
 package medilabo.frontapp.controller;
 
 import jakarta.validation.Valid;
+import medilabo.frontapp.model.Note;
 import medilabo.frontapp.model.Patient;
+import medilabo.frontapp.service.NoteService;
 import medilabo.frontapp.service.PatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +19,11 @@ public class PatientController {
     private final Logger logger = LoggerFactory.getLogger(PatientController.class);
 
     private final PatientService patientService;
+    private final NoteService noteService;
 
-    public PatientController(PatientService patientService) {
+    public PatientController(PatientService patientService, NoteService noteService) {
         this.patientService = patientService;
+        this.noteService = noteService;
     }
 
     @GetMapping(value = {"/patients"})
@@ -44,6 +48,13 @@ public class PatientController {
             model.addAttribute("message", "Le patient id : " + id + " n'existe pas.");
             return "error";
         }
+        List<Note> notes = noteService.getNotesByPatientId(id);
+        if (notes == null) {
+            model.addAttribute("noNotesError", "Aucune note pour ce patient");
+            model.addAttribute("patient", patient);
+            return "patient-details";
+        }
+        patient.setNotes(notes);
         model.addAttribute("patient", patient);
         return "patient-details";
     }
@@ -57,7 +68,7 @@ public class PatientController {
 
     @PostMapping("/patients/add")
     public String addPatient(@Valid @ModelAttribute("patient") Patient patient, BindingResult result, Model model) {
-        logger.info("PostMapping for /patients");
+        logger.info("PostMapping for /patients/add");
         if (!result.hasErrors() && patientService.createPatient(patient)) {
             return "redirect:/patients";
         } else {

@@ -32,6 +32,7 @@ public class PatientService {
                 return null;
             } else if (statusCode == 401) {
                 logger.info("Unauthorized");
+                return null;
             }
             logger.error("Problem retrieving patients. Error: {} ", statusCode);
             return null;
