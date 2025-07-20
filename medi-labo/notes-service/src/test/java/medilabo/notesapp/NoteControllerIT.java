@@ -2,6 +2,8 @@ package medilabo.notesapp;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import medilabo.notesapp.config.CustomProperties;
+import medilabo.notesapp.config.SecurityConfig;
 import medilabo.notesapp.model.Note;
 import medilabo.notesapp.repository.NoteRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -10,7 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -25,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Import({SecurityConfig.class, CustomProperties.class})
 @AutoConfigureMockMvc
 public class NoteControllerIT {
 
@@ -35,6 +40,9 @@ public class NoteControllerIT {
     private NoteRepository noteRepository;
 
     private List<Note> backup;
+
+    private final String username="${medilabo.user.username}";
+    private final String password="${medilabo.user.password}";
 
     @BeforeEach
     public void beforeEach() {
@@ -48,6 +56,7 @@ public class NoteControllerIT {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void getNotesByPatientId_shouldReturnNotesAndOk() throws Exception {
 
         MvcResult result = mockMvc
@@ -64,6 +73,7 @@ public class NoteControllerIT {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void getNotesByPatientId_withNoNotes_shouldReturnNoContent() throws Exception {
 
         MvcResult result = mockMvc
@@ -77,6 +87,7 @@ public class NoteControllerIT {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void addNote_shouldReturnNoteAndCreated() throws Exception {
         Note note = new Note();
         note.setContent("content");

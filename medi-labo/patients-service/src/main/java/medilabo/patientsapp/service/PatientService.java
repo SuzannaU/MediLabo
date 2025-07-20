@@ -3,8 +3,6 @@ package medilabo.patientsapp.service;
 import medilabo.patientsapp.exceptions.NonExistingPatientException;
 import medilabo.patientsapp.model.Patient;
 import medilabo.patientsapp.repository.PatientRepo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +15,6 @@ import java.util.List;
  */
 @Service
 public class PatientService {
-    private static final Logger logger = LoggerFactory.getLogger(PatientService.class);
 
     private final PatientRepo patientRepo;
 

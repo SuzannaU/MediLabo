@@ -2,15 +2,19 @@ package medilabo.notesapp;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import medilabo.notesapp.config.CustomProperties;
+import medilabo.notesapp.config.SecurityConfig;
 import medilabo.notesapp.controller.NoteController;
 import medilabo.notesapp.exceptions.NoteNotFoundException;
 import medilabo.notesapp.model.Note;
 import medilabo.notesapp.service.NoteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = NoteController.class)
 @ActiveProfiles("test")
+@Import({SecurityConfig.class, CustomProperties.class})
 public class NoteControllerTest {
 
     @Autowired
@@ -41,6 +46,9 @@ public class NoteControllerTest {
 
     private Note note;
 
+    private final String username="${medilabo.user.username}";
+    private final String password="${medilabo.user.password}";
+
     @BeforeEach
     public void beforeEach() {
         note = new Note();
@@ -48,6 +56,7 @@ public class NoteControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void getNotesByPatientId_shouldReturnNotesAndOk() throws Exception {
         when(noteService.getNotesByPatientId(anyInt())).thenReturn(List.of(note));
 
@@ -66,6 +75,7 @@ public class NoteControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void getNotesByPatientId_withNoNotesException_shouldReturnNoContent() throws Exception {
         when(noteService.getNotesByPatientId(anyInt())).thenThrow(new NoteNotFoundException());
 
@@ -81,6 +91,7 @@ public class NoteControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void addNote_shouldReturnNoteAndCreated() throws Exception {
         when(noteService.addNote(any(Note.class))).thenReturn(note);
 
@@ -99,6 +110,7 @@ public class NoteControllerTest {
     }
 
     @Test
+    @WithMockUser(username=username, password=password)
     public void addNote_withException_shouldReturnServerError() throws Exception {
         when(noteService.addNote(any(Note.class))).thenThrow(new RuntimeException());
 

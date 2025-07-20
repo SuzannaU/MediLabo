@@ -6,8 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * The interface used to perform CRUD operations on the database
+ */
 @Repository
 public interface NoteRepository extends MongoRepository<Note, String> {
 
-    List<Note> findByPatientId (int patientId);
+    List<Note> findByPatientId(int patientId);
 }
