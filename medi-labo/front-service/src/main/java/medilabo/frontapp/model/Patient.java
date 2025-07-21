@@ -16,7 +16,7 @@ public class Patient {
     @NotBlank(message = "lastname must not be blank")
     private String lastname;
 
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthdate;
 
     @NotBlank(message = "gender must be M or F")
@@ -26,6 +26,7 @@ public class Patient {
     private String phoneNumber;
 
     private List<Note> notes;
+    private String riskLevel;
 
     public Patient() {
     }
@@ -99,6 +100,14 @@ public class Patient {
 
     public void setNotes(List<Note> notes) {
         this.notes = notes;
+    }
+
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
     }
 
     @Override

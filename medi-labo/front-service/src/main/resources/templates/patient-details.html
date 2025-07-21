@@ -53,6 +53,23 @@
         <div class="col-8" th:text="${patient.phoneNumber}">
         </div>
     </div>
+    <div class="row">
+        <div class="col-2">
+            <p>Risque de diabète</p>
+        </div>
+        <div class="col-8">
+            <h5>
+                <span id="risk-level"
+                      th:switch="${patient.riskLevel}">
+                    <span th:case="'NOT_APPLICABLE'" class="badge text-bg-secondary">NOT APPLICABLE</span>
+                    <span th:case="'NONE'" class="badge text-bg-success">NONE</span>
+                    <span th:case="'BORDERLINE'" class="badge text-bg-warning">BORDERLINE</span>
+                    <span th:case="'IN_DANGER'" class="badge text-bg-danger">IN DANGER</span>
+                    <span th:case="'EARLY_ONSET'" class="badge text-bg-danger">EARLY ONSET</span>
+                </span>
+            </h5>
+        </div>
+    </div>
     <div class="row mb-3">
         <div class="col-1">
             <a class="btn btn-primary btn-sm" href="/patients">Retour</a>

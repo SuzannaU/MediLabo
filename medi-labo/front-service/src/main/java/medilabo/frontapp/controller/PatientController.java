@@ -5,6 +5,7 @@ import medilabo.frontapp.model.Note;
 import medilabo.frontapp.model.Patient;
 import medilabo.frontapp.service.NoteService;
 import medilabo.frontapp.service.PatientService;
+import medilabo.frontapp.service.RiskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,10 +21,12 @@ public class PatientController {
 
     private final PatientService patientService;
     private final NoteService noteService;
+    private final RiskService riskService;
 
-    public PatientController(PatientService patientService, NoteService noteService) {
+    public PatientController(PatientService patientService, NoteService noteService, RiskService riskService) {
         this.patientService = patientService;
         this.noteService = noteService;
+        this.riskService = riskService;
     }
 
     @GetMapping(value = {"/patients"})
@@ -48,12 +51,21 @@ public class PatientController {
             model.addAttribute("message", "Le patient id : " + id + " n'existe pas.");
             return "error";
         }
+
         List<Note> notes = noteService.getNotesByPatientId(id);
+        String riskLevel = riskService.getRiskByPatientId(id);
+
         if (notes == null) {
             model.addAttribute("noNotesError", "Aucune note pour ce patient");
+            if (riskLevel == null) {
+                model.addAttribute("riskError", "Impossible de calculer le risque");
+            }
+            patient.setRiskLevel(riskLevel);
             model.addAttribute("patient", patient);
             return "patient-details";
         }
+
+        patient.setRiskLevel(riskLevel);
         patient.setNotes(notes);
         model.addAttribute("patient", patient);
         return "patient-details";

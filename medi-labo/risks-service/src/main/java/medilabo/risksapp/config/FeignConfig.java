@@ -12,7 +12,6 @@ import java.util.Base64;
 /**
  * Configuration for Feign Client
  *
- * @see CustomErrorDecoder
  */
 @Configuration
 public class FeignConfig implements RequestInterceptor {
