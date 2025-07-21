@@ -2,8 +2,10 @@ package medilabo.risksapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
+@EnableFeignClients
 public class RisksServiceApplication {
 
 	public static void main(String[] args) {

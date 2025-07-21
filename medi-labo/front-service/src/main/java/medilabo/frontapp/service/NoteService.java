@@ -3,7 +3,6 @@ package medilabo.frontapp.service;
 import feign.FeignException;
 import medilabo.frontapp.model.Note;
 import medilabo.frontapp.proxy.NoteProxy;
-import medilabo.frontapp.proxy.PatientProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

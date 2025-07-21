@@ -28,10 +28,4 @@ public interface PatientProxy {
 
     @DeleteMapping("/patients-service/patients/{id}")
     ResponseEntity<Patient> deletePatient(@PathVariable("id") int id);
-
-//    @GetMapping("/notes-service/notes/{patientId}")
-//    ResponseEntity<List<Note>> getNotesByPatientId(@PathVariable("patientId") int patientId);
-//
-//    @PostMapping("/notes-service/notes")
-//    ResponseEntity<Note> createNote(@RequestBody Note note);
 }
