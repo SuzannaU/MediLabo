@@ -30,9 +30,6 @@ public class PatientService {
             } else if (statusCode == 204) {
                 logger.info("No patients found");
                 return null;
-            } else if (statusCode == 401) {
-                logger.info("Unauthorized");
-                return null;
             }
             logger.error("Problem retrieving patients. Error: {} ", statusCode);
             return null;
@@ -49,9 +46,6 @@ public class PatientService {
             if (statusCode == 200) {
                 logger.info("Successfully retrieved patient with id {}", id);
                 return response.getBody();
-            } else if (statusCode==404) {
-                logger.error("No patient found with id {}", id);
-                return null;
             }
             logger.error("Problem retrieving patient. Error: {} ", statusCode);
             return null;
@@ -68,10 +62,11 @@ public class PatientService {
             if (statusCode == 201) {
                 logger.info("Patient successfully created ");
                 return true;
-            } else if (statusCode == 400){
-                logger.error("Validation Error: creating patient unsuccessful");
-                return false;
             }
+            logger.error("Problem creating patient. Error: {} ", statusCode);
+            return false;
+        } catch (FeignException.BadRequest e) {
+            logger.error("Validation Error: creating patient unsuccessful", e);
             return false;
         } catch (FeignException e) {
             logger.error("Error: creating patient unsuccessful", e);
@@ -86,10 +81,11 @@ public class PatientService {
             if (statusCode == 200) {
                 logger.info("Patient with id {} updated successfully", id);
                 return true;
-            } else if (statusCode == 400){
-                logger.error("Validation Error: updating patient with id {} unsuccessful", id);
-                return false;
             }
+            logger.error("Problem updating patient. Error: {} ", statusCode);
+            return false;
+        } catch (FeignException.BadRequest e) {
+            logger.error("Validation Error: updating patient unsuccessful", e);
             return false;
         } catch (FeignException e) {
             logger.error("Error: updating patient with id {} unsuccessful", id);
@@ -104,11 +100,11 @@ public class PatientService {
             if (statusCode == 200) {
                 logger.info("Patient with id {} deleted successfully", id);
                 return true;
-            } else if (statusCode==404) {
-                logger.error("No patient to delete with id {}", id);
-                return false;
             }
-            logger.error("Problem retrieving patient. Error: {} ", statusCode);
+            logger.error("Problem deleting patient. Error: {} ", statusCode);
+            return false;
+        } catch (FeignException.NotFound e) {
+            logger.error("No patient to delete with id {}. Error: {}", id, e.status());
             return false;
         } catch (FeignException e) {
             logger.error("Problem deleting patient with id {}. Error: {}", id, e.status());

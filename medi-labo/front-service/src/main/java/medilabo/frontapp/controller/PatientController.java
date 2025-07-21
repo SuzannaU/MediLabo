@@ -29,7 +29,7 @@ public class PatientController {
         this.riskService = riskService;
     }
 
-    @GetMapping(value = {"/patients"})
+    @GetMapping("/patients")
     public String getPatients(Model model) {
         logger.info("GetMapping for /patients");
         List<Patient> patients = patientService.getAllPatients();
@@ -44,6 +44,7 @@ public class PatientController {
     @GetMapping("/patients/{id}")
     public String getPatient(@PathVariable("id") int id, Model model) {
         logger.info("GetMapping for /patients/{}", id);
+
         Patient patient = patientService.getPatient(id);
         if (patient == null) {
             model.addAttribute("status", 404);
@@ -53,20 +54,21 @@ public class PatientController {
         }
 
         List<Note> notes = noteService.getNotesByPatientId(id);
-        String riskLevel = riskService.getRiskByPatientId(id);
-
         if (notes == null) {
+            model.addAttribute("noNotesError", "Impossible de récupérer les notes");
+        } else if (notes.isEmpty()) {
             model.addAttribute("noNotesError", "Aucune note pour ce patient");
-            if (riskLevel == null) {
-                model.addAttribute("riskError", "Impossible de calculer le risque");
-            }
-            patient.setRiskLevel(riskLevel);
-            model.addAttribute("patient", patient);
-            return "patient-details";
+        } else {
+            patient.setNotes(notes);
         }
 
-        patient.setRiskLevel(riskLevel);
-        patient.setNotes(notes);
+        String riskLevel = riskService.getRiskByPatientId(id);
+        if (riskLevel == null) {
+            model.addAttribute("riskError", "Impossible de calculer le risque");
+        } else {
+            patient.setRiskLevel(riskLevel);
+        }
+
         model.addAttribute("patient", patient);
         return "patient-details";
     }

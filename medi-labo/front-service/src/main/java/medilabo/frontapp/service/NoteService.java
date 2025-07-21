@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,23 +16,22 @@ public class NoteService {
     private final Logger logger = LoggerFactory.getLogger(NoteService.class);
 
     private final NoteProxy noteProxy;
+
     public NoteService(NoteProxy noteProxy) {
         this.noteProxy = noteProxy;
     }
 
     public List<Note> getNotesByPatientId(int patientId) {
-        try{
+        try {
             ResponseEntity<List<Note>> response = noteProxy.getNotesByPatientId(patientId);
+            List<Note> notes = response.getBody();
             int statusCode = response.getStatusCode().value();
-            if(statusCode == 200){
+            if (statusCode == 200 && notes != null && !notes.isEmpty()) {
                 logger.info("Successfully retrieved notes");
-                return response.getBody();
-            } else if(statusCode == 204) {
+                return notes;
+            } else if (statusCode == 204) {
                 logger.info("No notes found");
-                return null;
-            } else if(statusCode == 401){
-                logger.info("Unauthorized");
-                return null;
+                return new ArrayList<>();
             }
             logger.error("Error retrieving notes. Error: {}", statusCode);
             return null;
