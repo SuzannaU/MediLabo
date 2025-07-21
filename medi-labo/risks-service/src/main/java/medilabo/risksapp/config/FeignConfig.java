@@ -11,6 +11,7 @@ import java.util.Base64;
 
 /**
  * Configuration for Feign Client
+ *
  * @see CustomErrorDecoder
  */
 @Configuration
@@ -21,16 +22,6 @@ public class FeignConfig implements RequestInterceptor {
 
     @Value("${medilabo.user.password}")
     private String password;
-
-    /**
-     * Custom ErrorDecoder used to recover status codes received with responses instead of automatic Feign Exceptions.
-     *
-     * @return the error decoder
-     */
-    @Bean
-    public ErrorDecoder errorDecoder() {
-        return new CustomErrorDecoder();
-    }
 
     /**
      * Override of the apply method from RequestInterceptor, adding Authorization header to requests
