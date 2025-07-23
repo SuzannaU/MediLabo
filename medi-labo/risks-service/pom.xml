@@ -7,7 +7,6 @@
 		<artifactId>medi-labo</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>medi-labo</groupId>
 	<artifactId>risks-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>risks-service</name>
@@ -50,6 +49,22 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>9</source>
@@ -58,5 +73,9 @@
 			</plugin>
 		</plugins>
 	</build>
+	<reporting>
+		<!-- must use -P enable-reporting to call reporting plugins from parent POM file -->
+		<plugins />
+	</reporting>
 
 </project>

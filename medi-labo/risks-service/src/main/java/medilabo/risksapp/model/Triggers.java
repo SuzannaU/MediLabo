@@ -13,7 +13,7 @@ public class Triggers {
             "Fumeuse",
             "Anormal",
             "Cholestérol",
-            "Vertiges",
+            "Vertige",
             "Rechute",
             "Réaction",
             "Anticorps"

@@ -7,7 +7,7 @@ public class Patient {
     private int patientId;
     private String gender;
     private LocalDate birthdate;
-    private String age;
+    private int age;
     private int numOfTriggers;
     private RiskLevel riskLevel;
 
@@ -35,11 +35,11 @@ public class Patient {
         this.birthdate = birthdate;
     }
 
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(int age) {
         this.age = age;
     }
 

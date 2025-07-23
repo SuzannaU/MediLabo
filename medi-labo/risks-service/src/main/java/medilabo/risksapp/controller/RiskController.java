@@ -24,6 +24,7 @@ public class RiskController {
 
     @GetMapping("/risks/{id}")
     public ResponseEntity<String> getRiskLevelByPatientId(@PathVariable("id") int id) {
+        logger.info("GetMapping for /risks/{id}");
         try {
             String riskLevel = riskService.calculateRisk(id).toString();
             return new ResponseEntity<>(riskLevel, HttpStatus.OK);

@@ -31,7 +31,7 @@ public class PatientServiceTest {
     private PatientService patientService;
 
     @Test
-    public void getAllPatients_shouldReturnPatients() {
+    public void getAllPatients_with200code_shouldReturnPatients() {
         when(patientProxy.getAllPatients())
                 .thenReturn(new ResponseEntity<>(List.of(new Patient()), HttpStatus.OK));
 
@@ -64,7 +64,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void getPatient_shouldReturnPatient() {
+    public void getPatient_withOkCode_shouldReturnPatient() {
         when(patientProxy.getPatient(anyInt()))
                 .thenReturn(new ResponseEntity<>(new Patient(), HttpStatus.OK));
 
@@ -97,7 +97,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void createPatient_shouldReturnTrue(){
+    public void createPatient_withCreatedCode_shouldReturnTrue(){
 
         when(patientProxy.createPatient(any(Patient.class)))
                 .thenReturn(new ResponseEntity<>(new Patient(), HttpStatus.CREATED));
@@ -157,7 +157,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void deletePatient_shouldReturnTrue(){
+    public void deletePatient_withOk_shouldReturnTrue(){
 
         when(patientProxy.deletePatient(anyInt()))
                 .thenReturn(new ResponseEntity<>(new Patient(), HttpStatus.OK));
@@ -187,8 +187,8 @@ public class PatientServiceTest {
     }
 
     class TestFeignException extends FeignException {
-        public TestFeignException() {
-            super(400, "Bad Request");
+        protected TestFeignException() {
+            super(500, "message");
         }
     }
 
