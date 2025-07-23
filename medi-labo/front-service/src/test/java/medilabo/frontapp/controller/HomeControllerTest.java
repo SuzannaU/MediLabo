@@ -1,8 +1,6 @@
-package medilabo.frontapp;
+package medilabo.frontapp.controller;
 
-import medilabo.frontapp.config.CustomProperties;
 import medilabo.frontapp.config.SecurityConfig;
-import medilabo.frontapp.controller.HomeController;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @WebMvcTest(HomeController.class)
-@Import({SecurityConfig.class, CustomProperties.class})
+@Import(SecurityConfig.class)
 @ActiveProfiles("test")
 public class HomeControllerTest {
 

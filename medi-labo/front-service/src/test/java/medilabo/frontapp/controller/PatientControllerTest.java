@@ -1,30 +1,26 @@
-package medilabo.frontapp;
+package medilabo.frontapp.controller;
 
-import medilabo.frontapp.config.CustomProperties;
 import medilabo.frontapp.config.SecurityConfig;
-import medilabo.frontapp.controller.PatientController;
 import medilabo.frontapp.model.Note;
 import medilabo.frontapp.model.Patient;
 import medilabo.frontapp.service.NoteService;
 import medilabo.frontapp.service.PatientService;
 import medilabo.frontapp.service.RiskService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -39,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PatientController.class)
-@Import({SecurityConfig.class, CustomProperties.class})
+@Import(SecurityConfig.class)
 @ActiveProfiles("test")
 public class PatientControllerTest {
 
@@ -131,21 +127,52 @@ public class PatientControllerTest {
         verify(patientService).getPatient(anyInt());
     }
 
-    //TODO faire tous les tests de cas différents
-    @Disabled
     @Test
     @WithMockUser
-    public void getPatient_withNoNotes_shouldReturnPatientDetailsWithError() throws Exception {
+    public void getPatient_withNullNotes_shouldReturnPatientDetailsWithError() throws Exception {
         when(patientService.getPatient(anyInt())).thenReturn(validPatient);
         when(noteService.getNotesByPatientId(anyInt())).thenReturn(null);
         when(riskService.getRiskByPatientId(anyInt())).thenReturn("riskLevel");
 
         mockMvc.perform(get("/patients/1"))
                 .andExpect(view().name("patient-details"))
-                .andExpect(model().attributeExists("patient"));
+                .andExpect(model().attributeExists("patient", "noNotesError"));
+
+        assertEquals("riskLevel", validPatient.getRiskLevel());
+        verify(patientService).getPatient(anyInt());
+        verify(noteService).getNotesByPatientId(anyInt());
+        verify(riskService).getRiskByPatientId(anyInt());
+    }
+
+    @Test
+    @WithMockUser
+    public void getPatient_withEmptyNotes_shouldReturnPatientDetailsWithError() throws Exception {
+        when(patientService.getPatient(anyInt())).thenReturn(validPatient);
+        when(noteService.getNotesByPatientId(anyInt())).thenReturn(new ArrayList<>());
+        when(riskService.getRiskByPatientId(anyInt())).thenReturn("riskLevel");
+
+        mockMvc.perform(get("/patients/1"))
+                .andExpect(view().name("patient-details"))
+                .andExpect(model().attributeExists("patient", "noNotesError"));
+
+        assertEquals("riskLevel", validPatient.getRiskLevel());
+        verify(patientService).getPatient(anyInt());
+        verify(noteService).getNotesByPatientId(anyInt());
+        verify(riskService).getRiskByPatientId(anyInt());
+    }
+
+    @Test
+    @WithMockUser
+    public void getPatient_withNullRisk_shouldReturnPatientDetailsWithError() throws Exception {
+        when(patientService.getPatient(anyInt())).thenReturn(validPatient);
+        when(noteService.getNotesByPatientId(anyInt())).thenReturn(List.of(new Note()));
+        when(riskService.getRiskByPatientId(anyInt())).thenReturn(null);
+
+        mockMvc.perform(get("/patients/1"))
+                .andExpect(view().name("patient-details"))
+                .andExpect(model().attributeExists("patient", "riskError"));
 
         assertNotNull(validPatient.getNotes());
-        assertEquals("riskLevel", validPatient.getRiskLevel());
         verify(patientService).getPatient(anyInt());
         verify(noteService).getNotesByPatientId(anyInt());
         verify(riskService).getRiskByPatientId(anyInt());

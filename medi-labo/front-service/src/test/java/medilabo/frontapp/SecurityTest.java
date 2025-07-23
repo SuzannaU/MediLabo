@@ -1,9 +1,10 @@
 package medilabo.frontapp;
 
-import medilabo.frontapp.config.CustomProperties;
 import medilabo.frontapp.config.SecurityConfig;
 import medilabo.frontapp.controller.PatientController;
+import medilabo.frontapp.service.NoteService;
 import medilabo.frontapp.service.PatientService;
+import medilabo.frontapp.service.RiskService;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PatientController.class)
-@Import({SecurityConfig.class, CustomProperties.class})
+@Import(SecurityConfig.class)
 @ActiveProfiles("test")
 public class SecurityTest {
 
@@ -27,6 +28,10 @@ public class SecurityTest {
 
     @MockitoBean
     private PatientService patientService;
+    @MockitoBean
+    private NoteService noteService;
+    @MockitoBean
+    private RiskService riskService;
 
     @ParameterizedTest
     @ValueSource(strings={"/patients", "/patients/1", "/patients/add","/patients/add/1"})

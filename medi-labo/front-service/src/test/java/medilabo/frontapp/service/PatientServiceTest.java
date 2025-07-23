@@ -1,9 +1,8 @@
-package medilabo.frontapp;
+package medilabo.frontapp.service;
 
-import feign.FeignException;
+import medilabo.frontapp.TestFeignException;
 import medilabo.frontapp.model.Patient;
 import medilabo.frontapp.proxy.PatientProxy;
-import medilabo.frontapp.service.PatientService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -53,9 +52,20 @@ public class PatientServiceTest {
     }
 
     @Test
+    public void getAllPatients_withOtherSuccessCode_shouldReturnNull() {
+        when(patientProxy.getAllPatients())
+                .thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
+
+        List<Patient> patients = patientService.getAllPatients();
+
+        assertNull(patients);
+        verify(patientProxy).getAllPatients();
+    }
+
+    @Test
     public void getAllPatients_withException_shouldReturnNull() {
         when(patientProxy.getAllPatients())
-                .thenThrow(new TestFeignException());
+                .thenThrow(new TestFeignException(500, "message"));
 
         List<Patient> patients = patientService.getAllPatients();
 
@@ -88,7 +98,7 @@ public class PatientServiceTest {
     @Test
     public void getPatient_withException_shouldReturnNull() {
         when(patientProxy.getPatient(anyInt()))
-                .thenThrow(new TestFeignException());
+                .thenThrow(new TestFeignException(500, "message"));
 
         Patient patient = patientService.getPatient(1);
 
@@ -120,7 +130,7 @@ public class PatientServiceTest {
     public void createPatient_withException_shouldReturnFalse(){
 
         when(patientProxy.createPatient(any(Patient.class)))
-                .thenThrow(new TestFeignException());
+                .thenThrow(new TestFeignException(500, "message"));
 
         assertFalse(patientService.createPatient(new Patient()));
         verify(patientProxy).createPatient(any(Patient.class));
@@ -150,7 +160,7 @@ public class PatientServiceTest {
     public void updatePatient_withException_shouldReturnFalse(){
 
         when(patientProxy.updatePatient(anyInt(), any(Patient.class)))
-                .thenThrow(new TestFeignException());
+                .thenThrow(new TestFeignException(500, "message"));
 
         assertFalse(patientService.updatePatient(1, new Patient()));
         verify(patientProxy).updatePatient(anyInt(), any(Patient.class));
@@ -180,16 +190,9 @@ public class PatientServiceTest {
     public void deletePatient_withException_shouldReturnFalse(){
 
         when(patientProxy.deletePatient(anyInt()))
-                .thenThrow(new TestFeignException());
+                .thenThrow(new TestFeignException(500, "message"));
 
         assertFalse(patientService.deletePatient(1));
         verify(patientProxy).deletePatient(anyInt());
     }
-
-    class TestFeignException extends FeignException {
-        protected TestFeignException() {
-            super(500, "message");
-        }
-    }
-
 }

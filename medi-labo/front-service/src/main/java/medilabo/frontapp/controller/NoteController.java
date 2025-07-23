@@ -1,6 +1,5 @@
 package medilabo.frontapp.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import medilabo.frontapp.model.Note;
 import medilabo.frontapp.service.NoteService;
 import org.slf4j.Logger;

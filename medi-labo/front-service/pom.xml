@@ -80,16 +80,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.5.3</version>
-                <executions>
-                    <execution>
-                        <id>integration-tests</id>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -101,5 +91,9 @@
             </plugin>
         </plugins>
     </build>
+    <reporting>
+        <!-- must use -P enable-reporting to call reporting plugins from parent POM file -->
+        <plugins />
+    </reporting>
 
 </project>
