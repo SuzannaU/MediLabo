@@ -52,6 +52,8 @@ public class RiskControllerIT {
     @BeforeEach
     public void BeforeEach() {
         patient = new Patient();
+        patient.setBirthdate(LocalDate.now().minusYears(52));
+        patient.setGender("M");
 
         notes = new ArrayList<>();
         Note note1 = new Note("rechute, fumer");    // fumer is not a trigger
@@ -63,9 +65,6 @@ public class RiskControllerIT {
     @Test
     @WithMockUser
     public void getRiskLevelByPatientId_shouldReturnRiskAndOk() throws Exception {
-
-        patient.setBirthdate(LocalDate.now().minusYears(52));
-        patient.setGender("M");
 
         when(patientProxy.getPatient(anyInt()))
                 .thenReturn(new ResponseEntity<>(patient, HttpStatus.OK));
@@ -88,9 +87,6 @@ public class RiskControllerIT {
     @WithMockUser
     public void getRiskLevelByPatientId_withNotesException_shouldReturnNAAndOk() throws Exception {
 
-        patient.setBirthdate(LocalDate.now().minusYears(52));
-        patient.setGender("M");
-
         when(patientProxy.getPatient(anyInt()))
                 .thenReturn(new ResponseEntity<>(patient, HttpStatus.OK));
         when(noteProxy.getNotesByPatientId(anyInt()))
@@ -112,9 +108,6 @@ public class RiskControllerIT {
     @WithMockUser
     public void getRiskLevelByPatientId_withPatientException_shouldReturnNotFound() throws Exception {
 
-        patient.setBirthdate(LocalDate.now().minusYears(52));
-        patient.setGender("M");
-
         when(patientProxy.getPatient(anyInt()))
                 .thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
@@ -132,9 +125,6 @@ public class RiskControllerIT {
     @Test
     @WithMockUser
     public void getRiskLevelByPatientId_withException_shouldReturnServerError() throws Exception {
-
-        patient.setBirthdate(LocalDate.now().minusYears(52));
-        patient.setGender("M");
 
         when(patientProxy.getPatient(anyInt()))
                 .thenThrow(new RuntimeException());

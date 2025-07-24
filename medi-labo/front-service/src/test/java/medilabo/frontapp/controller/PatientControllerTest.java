@@ -271,6 +271,8 @@ public class PatientControllerTest {
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/patients/" + id));
+
+        verify(patientService).updatePatient(anyInt(), any(Patient.class));
     }
 
     @Test

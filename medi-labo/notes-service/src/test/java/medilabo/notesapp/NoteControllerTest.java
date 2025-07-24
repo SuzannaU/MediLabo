@@ -2,7 +2,6 @@ package medilabo.notesapp;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import medilabo.notesapp.config.CustomProperties;
 import medilabo.notesapp.config.SecurityConfig;
 import medilabo.notesapp.controller.NoteController;
 import medilabo.notesapp.exceptions.NoteNotFoundException;
@@ -35,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = NoteController.class)
 @ActiveProfiles("test")
-@Import({SecurityConfig.class, CustomProperties.class})
+@Import(SecurityConfig.class)
 public class NoteControllerTest {
 
     @Autowired
@@ -46,9 +45,6 @@ public class NoteControllerTest {
 
     private Note note;
 
-    private final String username="${medilabo.user.username}";
-    private final String password="${medilabo.user.password}";
-
     @BeforeEach
     public void beforeEach() {
         note = new Note();
@@ -56,7 +52,7 @@ public class NoteControllerTest {
     }
 
     @Test
-    @WithMockUser(username=username, password=password)
+    @WithMockUser
     public void getNotesByPatientId_shouldReturnNotesAndOk() throws Exception {
         when(noteService.getNotesByPatientId(anyInt())).thenReturn(List.of(note));
 
@@ -75,7 +71,7 @@ public class NoteControllerTest {
     }
 
     @Test
-    @WithMockUser(username=username, password=password)
+    @WithMockUser
     public void getNotesByPatientId_withNoNotesException_shouldReturnNoContent() throws Exception {
         when(noteService.getNotesByPatientId(anyInt())).thenThrow(new NoteNotFoundException());
 
@@ -91,7 +87,7 @@ public class NoteControllerTest {
     }
 
     @Test
-    @WithMockUser(username=username, password=password)
+    @WithMockUser
     public void addNote_shouldReturnNoteAndCreated() throws Exception {
         when(noteService.addNote(any(Note.class))).thenReturn(note);
 
@@ -110,7 +106,7 @@ public class NoteControllerTest {
     }
 
     @Test
-    @WithMockUser(username=username, password=password)
+    @WithMockUser
     public void addNote_withException_shouldReturnServerError() throws Exception {
         when(noteService.addNote(any(Note.class))).thenThrow(new RuntimeException());
 
