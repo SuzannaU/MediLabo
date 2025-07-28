@@ -7,7 +7,6 @@
 		<artifactId>medi-labo</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>medi-labo</groupId>
 	<artifactId>registry-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>registry-service</name>

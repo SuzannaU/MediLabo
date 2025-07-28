@@ -14,6 +14,7 @@
         <jacoco.version>0.8.12</jacoco.version>
         <failsafe.version>3.5.3</failsafe.version>
         <surefire.version>3.5.2</surefire.version>
+        <xstream.version>1.4.21</xstream.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -31,6 +32,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Library used by netflix eureka-client, version is forced to avoid a vulnerability -->
+            <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>${xstream.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
     <build>
