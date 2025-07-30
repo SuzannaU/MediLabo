@@ -11,6 +11,10 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>patients-service</name>
 	<description>Microservice for handling patients</description>
+	<properties>
+		<start-class>medilabo.patientsapp.PatientsServiceApplication</start-class>
+		<mysql-driver.version>8.3.0</mysql-driver.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -31,6 +35,7 @@
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
+			<version>${mysql-driver.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -54,6 +59,17 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>medilabo.patientsapp.PatientsServiceApplication</mainClass>
+					<layout>JAR</layout>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
