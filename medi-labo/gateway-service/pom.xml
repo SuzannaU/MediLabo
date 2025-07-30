@@ -11,6 +11,9 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>gateway-service</name>
 	<description>Microservice for Gateway API</description>
+	<properties>
+		<start-class>medilabo.gatewayapi.GatewayServiceApplication</start-class>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -42,6 +45,17 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>medilabo.gatewayapi.GatewayServiceApplication</mainClass>
+					<layout>JAR</layout>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

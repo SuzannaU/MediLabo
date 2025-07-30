@@ -1,0 +1,94 @@
+services:
+
+  registry-service:
+    container_name: registry-service
+    build:
+      context: .
+      dockerfile: registry-service/Dockerfile
+    networks:
+      - internal-network
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8761/eureka/"]
+      interval: 10s # How often the status will be checked
+      retries: 5 # How many times to check before considering it unavailable
+      start_period: 10s # How long after startup to begin checks
+      timeout: 10s # Timeout for each test run
+
+  gateway-service:
+    container_name: gateway-service
+    build:
+      context: .
+      dockerfile: gateway-service/Dockerfile
+    depends_on:
+      registry-service:
+        condition: service_healthy
+    networks:
+      - internal-network
+
+  patients-service:
+    container_name: patients-service
+    build:
+      context: .
+      dockerfile: patients-service/Dockerfile
+    depends_on:
+      registry-service:
+        condition: service_healthy
+      gateway-service:
+        condition:  service_started
+    networks:
+      - internal-network
+
+  notes-service:
+    container_name: notes-service
+    build:
+      context: .
+      dockerfile: notes-service/Dockerfile
+    depends_on:
+      registry-service:
+        condition: service_healthy
+      gateway-service:
+        condition:  service_started
+    networks:
+      - internal-network
+
+  risks-service:
+    container_name: risks-service
+    build:
+      context: .
+      dockerfile: risks-service/Dockerfile
+    depends_on:
+      registry-service:
+        condition: service_healthy
+      gateway-service:
+        condition:  service_started
+      patients-service:
+        condition:  service_started
+      notes-service:
+        condition:  service_started
+    networks:
+      - internal-network
+
+  front-service:
+    container_name: front-service
+    build:
+      context: .
+      dockerfile: front-service/Dockerfile
+    depends_on:
+      registry-service:
+        condition: service_healthy
+      gateway-service:
+        condition:  service_started
+      patients-service:
+        condition:  service_started
+      notes-service:
+        condition:  service_started
+      risks-service:
+        condition:  service_started
+    ports:
+      - "8080:8080"
+    networks:
+      - internal-network
+
+networks:
+  internal-network:
+    driver: bridge
