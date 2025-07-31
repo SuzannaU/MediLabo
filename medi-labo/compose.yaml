@@ -23,6 +23,8 @@ services:
     build:
       context: .
       dockerfile: gateway-service/Dockerfile
+    environment:
+      - EUREKA_HOST=registry-service
     depends_on:
       registry-service:
         condition: service_healthy
@@ -34,6 +36,8 @@ services:
     build:
       context: .
       dockerfile: patients-service/Dockerfile
+    environment:
+      - EUREKA_HOST=registry-service
     depends_on:
       registry-service:
         condition: service_healthy
@@ -47,6 +51,8 @@ services:
     build:
       context: .
       dockerfile: notes-service/Dockerfile
+    environment:
+      - EUREKA_HOST=registry-service
     depends_on:
       registry-service:
         condition: service_healthy
@@ -60,6 +66,8 @@ services:
     build:
       context: .
       dockerfile: risks-service/Dockerfile
+    environment:
+      - EUREKA_HOST=registry-service
     depends_on:
       registry-service:
         condition: service_healthy
@@ -77,6 +85,8 @@ services:
     build:
       context: .
       dockerfile: front-service/Dockerfile
+    environment:
+      - EUREKA_HOST=registry-service
     depends_on:
       registry-service:
         condition: service_healthy
