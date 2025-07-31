@@ -1,3 +1,7 @@
+# Before building the compose, the builder image needs to be built
+# From medi-labo directory:
+# docker build -f Dockerfile .
+
 services:
 
   registry-service:
@@ -8,11 +12,11 @@ services:
     networks:
       - internal-network
     healthcheck:
-      test: ["CMD", "curl", "http://localhost:8761/eureka/"]
+      test: [ "CMD", "curl", "http://localhost:8761/eureka/" ]
       interval: 10s # How often the status will be checked
       retries: 5 # How many times to check before considering it unavailable
-      start_period: 10s # How long after startup to begin checks
-      timeout: 10s # Timeout for each test run
+      start_period: 5s # How long after startup to begin checks
+      timeout: 5s # Timeout for each test run
 
   gateway-service:
     container_name: gateway-service
@@ -34,7 +38,7 @@ services:
       registry-service:
         condition: service_healthy
       gateway-service:
-        condition:  service_started
+        condition: service_started
     networks:
       - internal-network
 
@@ -47,7 +51,7 @@ services:
       registry-service:
         condition: service_healthy
       gateway-service:
-        condition:  service_started
+        condition: service_started
     networks:
       - internal-network
 
@@ -60,11 +64,11 @@ services:
       registry-service:
         condition: service_healthy
       gateway-service:
-        condition:  service_started
+        condition: service_started
       patients-service:
-        condition:  service_started
+        condition: service_started
       notes-service:
-        condition:  service_started
+        condition: service_started
     networks:
       - internal-network
 
@@ -77,13 +81,13 @@ services:
       registry-service:
         condition: service_healthy
       gateway-service:
-        condition:  service_started
+        condition: service_started
       patients-service:
-        condition:  service_started
+        condition: service_started
       notes-service:
-        condition:  service_started
+        condition: service_started
       risks-service:
-        condition:  service_started
+        condition: service_started
     ports:
       - "8080:8080"
     networks:
