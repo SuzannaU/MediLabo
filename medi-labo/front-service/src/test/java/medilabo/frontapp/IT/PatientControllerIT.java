@@ -66,6 +66,9 @@ public class PatientControllerIT {
         when(patientProxy.getAllPatients())
                 .thenReturn(new ResponseEntity<>(List.of(new Patient()), HttpStatus.OK));
 
+        when(riskProxy.getRiskLevelByPatientId(anyInt()))
+                .thenReturn(new ResponseEntity<>("riskLevel", HttpStatus.OK));
+
         mockMvc.perform(get("/patients"))
                 .andExpect(view().name("patients"))
                 .andExpect(model().attributeExists("patients"));

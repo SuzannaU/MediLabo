@@ -37,6 +37,16 @@ public class PatientController {
             model.addAttribute("emptyListError", "Il n'y a aucun patient");
             return "patients";
         }
+
+        for (Patient patient : patients) {
+            String riskLevel = riskService.getRiskByPatientId(patient.getId());
+            logger.debug(riskLevel);
+            if (riskLevel != null) {
+                patient.setRiskLevel(riskLevel);
+            }
+
+        }
+
         model.addAttribute("patients", patients);
         return "patients";
     }
