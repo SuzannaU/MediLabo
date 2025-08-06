@@ -1,8 +1,12 @@
-# Before building the compose, the builder image needs to be built
-# From medi-labo directory:
-# docker build -f Dockerfile .
 
 services:
+  # This service will only be used to build images for the other services. It will not start un running container.
+  medilabo-builder:
+    container_name: medilabo-builder
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: medilabo-builder:latest
 
   registry-service:
     container_name: registry-service
@@ -13,10 +17,10 @@ services:
       - internal-network
     healthcheck:
       test: [ "CMD", "curl", "http://localhost:8761/eureka/" ]
-      interval: 10s # How often the status will be checked
-      retries: 5 # How many times to check before considering it unavailable
-      start_period: 5s # How long after startup to begin checks
-      timeout: 5s # Timeout for each test run
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
 
   gateway-service:
     container_name: gateway-service
@@ -53,6 +57,8 @@ services:
       dockerfile: notes-service/Dockerfile
     environment:
       - EUREKA_HOST=registry-service
+      - MONGO_HOST=host.docker.internal
+      - MONGO_PORT=27017
     depends_on:
       registry-service:
         condition: service_healthy

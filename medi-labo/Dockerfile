@@ -1,4 +1,4 @@
-# Recover pom.xml file from parent project, child pom files, and fetch and cache dependencies
+# Recover pom.xml file from parent project, pom files from child projects, and fetch and cache dependencies
 FROM maven:3.9.11-eclipse-temurin-17-alpine AS dependencies
 WORKDIR /app
 COPY pom.xml .
