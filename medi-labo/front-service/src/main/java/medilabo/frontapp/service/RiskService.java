@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Service used to handle Response entities received from the proxy interface, regarding RiskLevel String objects.
+ *
+ * @see RiskProxy
+ */
 @Service
 public class RiskService {
     private final Logger logger = LoggerFactory.getLogger(RiskService.class);
@@ -21,6 +26,12 @@ public class RiskService {
         this.riskProxy = riskProxy;
     }
 
+    /**
+     * Checks in riskCache Map if an entry already exists with that ID, so that the risk won't be calculated if it already has been. If the ID is absent from the Map, then retrieves the RiskLevel for that ID and adds it to the cache Map.
+     *
+     * @param patientId
+     * @return risk level String if successful, null if an error is encountered.
+     */
     public String getRiskByPatientId(int patientId) {
         risksCache.computeIfAbsent(patientId, id -> {
             try {

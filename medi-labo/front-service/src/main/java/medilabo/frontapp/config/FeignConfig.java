@@ -2,17 +2,11 @@ package medilabo.frontapp.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import feign.codec.ErrorDecoder;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Base64;
 
-/**
- * Configuration for Feign Client.
- *
- */
 @Configuration
 public class FeignConfig implements RequestInterceptor {
 
@@ -23,7 +17,8 @@ public class FeignConfig implements RequestInterceptor {
     private String password;
 
     /**
-     * Override of the apply method from RequestInterceptor, adding Authorization header to requests
+     * Override of the apply method from RequestInterceptor.
+     * Adds Authorization header to requests for Http Basic authentication
      *
      * @param requestTemplate
      */

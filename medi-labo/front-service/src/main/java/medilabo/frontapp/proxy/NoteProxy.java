@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+/**
+ * This interface uses Feign Client to build requests that are sent to the notes-service module, through the gateway.
+ *
+ * @see FeignConfig
+ */
 @Repository
 @FeignClient(name = "gateway-service", contextId = "notes-service", configuration = FeignConfig.class)
 public interface NoteProxy {

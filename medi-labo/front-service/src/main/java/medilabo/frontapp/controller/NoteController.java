@@ -22,6 +22,13 @@ public class NoteController {
         this.noteService = noteService;
     }
 
+    /**
+     * Fetches add-note template and pre-loads the patient id so that the created note is attached to that patient. Only accessible from patient-details page.
+     *
+     * @param patientId
+     * @param model
+     * @return add-note template
+     */
     @GetMapping("/notes/add")
     public String getAddNoteForm(@RequestParam("id") int patientId, Model model) {
         logger.info("GetMapping for /notes/add");
@@ -31,8 +38,16 @@ public class NoteController {
         return "add-note";
     }
 
+    /**
+     * Creates a new note and redirects to the origin patient page. If the note cannot be saved, displays an error message on the page.
+     *
+     * @param note   to be saved
+     * @param result
+     * @param model
+     * @return redirection to patient page if successful, reloads add-note page with error if not.
+     */
     @PostMapping("/notes/add")
-    public String addNote(@ModelAttribute("note") Note note, BindingResult  result, Model model) {
+    public String addNote(@ModelAttribute("note") Note note, BindingResult result, Model model) {
         logger.info("PostMapping for /notes/add");
         if (!result.hasErrors() && noteService.addNote(note)) {
             return "redirect:/patients/" + note.getPatientId();

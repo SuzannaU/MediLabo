@@ -36,8 +36,8 @@ public class PatientServiceTest {
 
         List<Patient> patients = patientService.getAllPatients();
 
-         assertEquals(1, patients.size());
-         verify(patientProxy).getAllPatients();
+        assertEquals(1, patients.size());
+        verify(patientProxy).getAllPatients();
     }
 
     @Test
@@ -107,7 +107,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void createPatient_withCreatedCode_shouldReturnTrue(){
+    public void createPatient_withCreatedCode_shouldReturnTrue() {
 
         when(patientProxy.createPatient(any(Patient.class)))
                 .thenReturn(new ResponseEntity<>(new Patient(), HttpStatus.CREATED));
@@ -117,7 +117,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void createPatient_withBadRequest_shouldReturnFalse(){
+    public void createPatient_withBadRequest_shouldReturnFalse() {
 
         when(patientProxy.createPatient(any(Patient.class)))
                 .thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
@@ -127,7 +127,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void createPatient_withException_shouldReturnFalse(){
+    public void createPatient_withException_shouldReturnFalse() {
 
         when(patientProxy.createPatient(any(Patient.class)))
                 .thenThrow(new TestFeignException(500, "message"));
@@ -137,7 +137,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void updatePatient_shouldReturnTrue(){
+    public void updatePatient_shouldReturnTrue() {
 
         when(patientProxy.updatePatient(anyInt(), any(Patient.class)))
                 .thenReturn(new ResponseEntity<>(new Patient(), HttpStatus.OK));
@@ -147,7 +147,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void updatePatient_withBadRequest_shouldReturnFalse(){
+    public void updatePatient_withBadRequest_shouldReturnFalse() {
 
         when(patientProxy.updatePatient(anyInt(), any(Patient.class)))
                 .thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
@@ -157,7 +157,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void updatePatient_withException_shouldReturnFalse(){
+    public void updatePatient_withException_shouldReturnFalse() {
 
         when(patientProxy.updatePatient(anyInt(), any(Patient.class)))
                 .thenThrow(new TestFeignException(500, "message"));
@@ -167,7 +167,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void deletePatient_withOk_shouldReturnTrue(){
+    public void deletePatient_withOk_shouldReturnTrue() {
 
         when(patientProxy.deletePatient(anyInt()))
                 .thenReturn(new ResponseEntity<>(new Patient(), HttpStatus.OK));
@@ -177,7 +177,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void deletePatient_withNotFound_shouldReturnFalse(){
+    public void deletePatient_withNotFound_shouldReturnFalse() {
 
         when(patientProxy.deletePatient(anyInt()))
                 .thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -187,7 +187,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void deletePatient_withException_shouldReturnFalse(){
+    public void deletePatient_withException_shouldReturnFalse() {
 
         when(patientProxy.deletePatient(anyInt()))
                 .thenThrow(new TestFeignException(500, "message"));

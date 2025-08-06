@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service used to handle Response entities received from the proxy interface, regarding Patient objects.
+ *
+ * @see PatientProxy
+ */
 @Service
 public class PatientService {
     private final Logger logger = LoggerFactory.getLogger(PatientService.class);
@@ -20,6 +25,11 @@ public class PatientService {
         this.patientProxy = patientProxy;
     }
 
+    /**
+     * Retrieves a List of all the patients from the patients-service module.
+     *
+     * @return the List of all the patients if successful, or null if there are no patients or if an error is encountered.
+     */
     public List<Patient> getAllPatients() {
         try {
             ResponseEntity<List<Patient>> response = patientProxy.getAllPatients();
@@ -39,6 +49,12 @@ public class PatientService {
         }
     }
 
+    /**
+     * Retrieves a patient according to its id.
+     *
+     * @param id
+     * @return the patient, or null if an error occurs.
+     */
     public Patient getPatient(int id) {
         try {
             ResponseEntity<Patient> response = patientProxy.getPatient(id);
@@ -55,6 +71,12 @@ public class PatientService {
         }
     }
 
+    /**
+     * Saves a new patient.
+     *
+     * @param patient to be saved
+     * @return true if successful, false if any error occurs.
+     */
     public boolean createPatient(Patient patient) {
         try {
             ResponseEntity<Patient> response = patientProxy.createPatient(patient);
@@ -74,6 +96,13 @@ public class PatientService {
         }
     }
 
+    /**
+     * Updates a patient.
+     *
+     * @param id      the id of the patient to be updated
+     * @param patient
+     * @return true if update is successful, false if any error occurs.
+     */
     public boolean updatePatient(int id, Patient patient) {
         try {
             ResponseEntity<Patient> response = patientProxy.updatePatient(id, patient);
@@ -93,6 +122,12 @@ public class PatientService {
         }
     }
 
+    /**
+     * Deletes a patient according to its id.
+     *
+     * @param id
+     * @return true if deletion is successful, false if an error occurs.
+     */
     public boolean deletePatient(int id) {
         try {
             ResponseEntity<Patient> response = patientProxy.deletePatient(id);

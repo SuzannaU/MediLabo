@@ -29,6 +29,12 @@ public class PatientController {
         this.riskService = riskService;
     }
 
+    /**
+     * Displays the patients template populated with the list of patients. Model services request patient data from backend services.
+     *
+     * @param model
+     * @return patients template
+     */
     @GetMapping("/patients")
     public String getPatients(Model model) {
         logger.info("GetMapping for /patients");
@@ -40,17 +46,22 @@ public class PatientController {
 
         for (Patient patient : patients) {
             String riskLevel = riskService.getRiskByPatientId(patient.getId());
-            logger.debug(riskLevel);
             if (riskLevel != null) {
                 patient.setRiskLevel(riskLevel);
             }
-
         }
 
         model.addAttribute("patients", patients);
         return "patients";
     }
 
+    /**
+     * Fetches the patient-details template and populates it with patient details gathered from backend services.
+     *
+     * @param id    the id of the desired patient
+     * @param model
+     * @return patient-details template if the patient is successfully retrieved, or error template with 404 status.
+     */
     @GetMapping("/patients/{id}")
     public String getPatient(@PathVariable("id") int id, Model model) {
         logger.info("GetMapping for /patients/{}", id);
@@ -83,6 +94,12 @@ public class PatientController {
         return "patient-details";
     }
 
+    /**
+     * Fetches the add-patient template form for a new patient
+     *
+     * @param model
+     * @return add-patient template
+     */
     @GetMapping("/patients/add")
     public String getNewPatientForm(Model model) {
         logger.info("GetMapping for /patients/add");
@@ -90,6 +107,14 @@ public class PatientController {
         return "add-patient";
     }
 
+    /**
+     * Saves a new patient. Checks if validation requirements are met.
+     *
+     * @param patient data from the form entries
+     * @param result
+     * @param model
+     * @return redirection to patients page if successful, or reloading of the form with error messages if not.
+     */
     @PostMapping("/patients/add")
     public String addPatient(@Valid @ModelAttribute("patient") Patient patient, BindingResult result, Model model) {
         logger.info("PostMapping for /patients/add");
@@ -102,6 +127,13 @@ public class PatientController {
         }
     }
 
+    /**
+     * Fetches the updating form and populates it with the data from the origin patient.
+     *
+     * @param id    the patient id
+     * @param model
+     * @return the update-patient template, or a 404 error page if no patient is found
+     */
     @GetMapping("/patients/edit/{id}")
     public String getEditPatientForm(@PathVariable("id") int id, Model model) {
         logger.info("GetMapping for /patients/edit/{}", id);
@@ -116,6 +148,15 @@ public class PatientController {
         return "update-patient";
     }
 
+    /**
+     * Updates a patient. Checks if validation requirements are met.
+     *
+     * @param id      the patient id
+     * @param patient the data from the form entries
+     * @param result
+     * @param model
+     * @return redirection to patients page if successful, or reloading of the page with error messages.
+     */
     @PostMapping("/patients/edit/{id}")
     public String updatePatient(@PathVariable("id") int id, @Valid @ModelAttribute("patient") Patient patient, BindingResult result, Model model) {
         logger.info("PostMapping for /patients/edit/{}", id);
@@ -128,6 +169,13 @@ public class PatientController {
         }
     }
 
+    /**
+     * Deletes a patient entirely, according to its id.
+     *
+     * @param id    the patient id
+     * @param model
+     * @return the patients page if deletion is successful, or reloading of the page with error messages if not.
+     */
     @PostMapping("/patients/delete/{id}")
     public String deletePatient(@PathVariable("id") int id, Model model) {
         logger.info("PostMapping for /patients/delete/{}", id);

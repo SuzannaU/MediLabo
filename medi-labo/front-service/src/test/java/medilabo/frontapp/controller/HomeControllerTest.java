@@ -21,7 +21,7 @@ public class HomeControllerTest {
     private MockMvc mockMvc;
 
     @ParameterizedTest
-    @ValueSource(strings={"", "/"})
+    @ValueSource(strings = {"", "/"})
     public void getHome_shouldReturnHome(String args) throws Exception {
         mockMvc.perform(get(args))
                 .andExpect(view().name("home"));

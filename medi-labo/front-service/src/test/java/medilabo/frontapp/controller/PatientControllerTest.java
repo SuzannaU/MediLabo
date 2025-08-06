@@ -57,18 +57,6 @@ public class PatientControllerTest {
 
     }
 
-    private static Stream<Arguments> invalidPatientProvider() {
-        return Stream.of(
-                Arguments.of(new Patient(null, "lastname", LocalDate.now(), "g")),
-                Arguments.of(new Patient("firstname", null, LocalDate.now(), "g")),
-                Arguments.of(new Patient("firstname", "lastname", null, "g")),
-                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), null)),
-                Arguments.of(new Patient("", "lastname", LocalDate.now(), "g")),
-                Arguments.of(new Patient("firstname", "", LocalDate.now(), "g")),
-                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), "")),
-                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), "gender")));
-    }
-
     @Test
     @WithMockUser
     public void getPatients_shouldReturnPatients() throws Exception {
@@ -99,6 +87,7 @@ public class PatientControllerTest {
     @Test
     @WithMockUser
     public void getPatient_shouldReturnPatientDetails() throws Exception {
+
         when(patientService.getPatient(anyInt())).thenReturn(validPatient);
         when(noteService.getNotesByPatientId(anyInt())).thenReturn(List.of(new Note()));
         when(riskService.getRiskByPatientId(anyInt())).thenReturn("riskLevel");
@@ -130,6 +119,7 @@ public class PatientControllerTest {
     @Test
     @WithMockUser
     public void getPatient_withNullNotes_shouldReturnPatientDetailsWithError() throws Exception {
+
         when(patientService.getPatient(anyInt())).thenReturn(validPatient);
         when(noteService.getNotesByPatientId(anyInt())).thenReturn(null);
         when(riskService.getRiskByPatientId(anyInt())).thenReturn("riskLevel");
@@ -147,6 +137,7 @@ public class PatientControllerTest {
     @Test
     @WithMockUser
     public void getPatient_withEmptyNotes_shouldReturnPatientDetailsWithError() throws Exception {
+
         when(patientService.getPatient(anyInt())).thenReturn(validPatient);
         when(noteService.getNotesByPatientId(anyInt())).thenReturn(new ArrayList<>());
         when(riskService.getRiskByPatientId(anyInt())).thenReturn("riskLevel");
@@ -164,6 +155,7 @@ public class PatientControllerTest {
     @Test
     @WithMockUser
     public void getPatient_withNullRisk_shouldReturnPatientDetailsWithError() throws Exception {
+
         when(patientService.getPatient(anyInt())).thenReturn(validPatient);
         when(noteService.getNotesByPatientId(anyInt())).thenReturn(List.of(new Note()));
         when(riskService.getRiskByPatientId(anyInt())).thenReturn(null);
@@ -333,5 +325,17 @@ public class PatientControllerTest {
                 .andExpect(model().attributeExists("deletePatientError", "patients"));
 
         verify(patientService).deletePatient(anyInt());
+    }
+
+    private static Stream<Arguments> invalidPatientProvider() {
+        return Stream.of(
+                Arguments.of(new Patient(null, "lastname", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", null, LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", "lastname", null, "g")),
+                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), null)),
+                Arguments.of(new Patient("", "lastname", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", "", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), "")),
+                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), "gender")));
     }
 }

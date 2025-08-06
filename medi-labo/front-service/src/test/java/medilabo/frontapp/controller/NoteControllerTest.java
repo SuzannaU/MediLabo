@@ -35,7 +35,8 @@ public class NoteControllerTest {
     @WithMockUser
     public void getAddNoteForm_shouldReturnForm() throws Exception {
 
-        mockMvc.perform(get("/notes/add").param("id", "1"))
+        mockMvc.perform(get("/notes/add")
+                        .param("id", "1"))
                 .andExpect(view().name("add-note"))
                 .andExpect(model().attributeExists("note"));
     }
