@@ -20,7 +20,7 @@ public class RiskService {
     private final Logger logger = LoggerFactory.getLogger(RiskService.class);
 
     private final RiskProxy riskProxy;
-    private final Map<Integer, String> risksCache = new ConcurrentHashMap<>();
+    protected final Map<Integer, String> risksCache = new ConcurrentHashMap<>();
 
     public RiskService(RiskProxy riskProxy) {
         this.riskProxy = riskProxy;

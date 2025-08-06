@@ -21,9 +21,11 @@ public class NoteService {
     private final Logger logger = LoggerFactory.getLogger(NoteService.class);
 
     private final NoteProxy noteProxy;
+    private final RiskService riskService;
 
-    public NoteService(NoteProxy noteProxy) {
+    public NoteService(NoteProxy noteProxy, RiskService riskService) {
         this.noteProxy = noteProxy;
+        this.riskService = riskService;
     }
 
     /**
@@ -53,7 +55,7 @@ public class NoteService {
     }
 
     /**
-     * SAves a new Note for a given patient.
+     * Saves a new Note for a given patient. Adding a note also removes the corresponding risk level from the cache, allowing a recalculation according to the new note.
      *
      * @param note to be saved
      * @return true if successful, or false if an error is encountered.
@@ -64,6 +66,7 @@ public class NoteService {
             int statusCode = response.getStatusCode().value();
             if (statusCode == 201) {
                 logger.info("Successfully added note");
+                riskService.risksCache.remove(note.getPatientId());
                 return true;
             }
             logger.error("Error adding note. Error: {}", statusCode);
