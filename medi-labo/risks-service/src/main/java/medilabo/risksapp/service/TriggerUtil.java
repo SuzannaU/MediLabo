@@ -12,6 +12,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Utility service that calculates triggers on Notes. Its method is used in RiskService class.
+ *
+ * @see RiskService
+ * @see Triggers
+ */
 @Service
 public class TriggerUtil {
     private final Logger logger = LoggerFactory.getLogger(TriggerUtil.class);
@@ -22,12 +28,19 @@ public class TriggerUtil {
         this.noteProxy = noteProxy;
     }
 
+    /**
+     * Uses private method to recover a list of Notes from a patient ID, then counts the number of triggers that are present in the notes. The number of occurrences for each trigger is not relevant.
+     * If Exceptions are thrown, they are handled down the line in RiskController.
+     *
+     * @param patientId
+     * @return numTrigger - can be 0
+     */
     public int countMatchingTriggers(int patientId) {
 
         int numTriggers = 0;
         List<Note> notes = getNotesByPatientId(patientId);
 
-        //Concatenate all notes to search for each trigger only once
+        //Concatenate all patient notes to search for each trigger only once
         StringBuilder allNotes = new StringBuilder();
         for (Note note : notes) {
             String content = note.getContent().toLowerCase();

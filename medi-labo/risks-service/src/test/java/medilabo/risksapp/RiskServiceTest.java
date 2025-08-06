@@ -48,36 +48,6 @@ public class RiskServiceTest {
         patient = new Patient();
     }
 
-    private static Stream<Arguments> patientProvider() {
-        return Stream.of(
-                // Age > 30
-                Arguments.of(31, "M", 0, RiskLevel.NONE),
-                Arguments.of(31, "F", 1, RiskLevel.NONE),
-                Arguments.of(31, "F", 2, RiskLevel.BORDERLINE),
-                Arguments.of(31, "F", 5, RiskLevel.BORDERLINE),
-                Arguments.of(31, "F", 6, RiskLevel.IN_DANGER),
-                Arguments.of(31, "F", 7, RiskLevel.IN_DANGER),
-                Arguments.of(31, "F", 8, RiskLevel.EARLY_ONSET),
-                Arguments.of(31, "F", 10, RiskLevel.EARLY_ONSET),
-
-                // Age <= 30, gender M
-                Arguments.of(30, "M", 0, RiskLevel.NONE),
-                Arguments.of(30, "M", 2, RiskLevel.NONE),
-                Arguments.of(30, "M", 3, RiskLevel.IN_DANGER),
-                Arguments.of(30, "M", 4, RiskLevel.IN_DANGER),
-                Arguments.of(30, "M", 5, RiskLevel.EARLY_ONSET),
-                Arguments.of(30, "M", 6, RiskLevel.EARLY_ONSET),
-
-                // Age <= 30, gender F
-                Arguments.of(30, "F", 0, RiskLevel.NONE),
-                Arguments.of(30, "F", 3, RiskLevel.NONE),
-                Arguments.of(30, "F", 4, RiskLevel.IN_DANGER),
-                Arguments.of(30, "F", 6, RiskLevel.IN_DANGER),
-                Arguments.of(30, "F", 7, RiskLevel.EARLY_ONSET),
-                Arguments.of(30, "F", 8, RiskLevel.EARLY_ONSET)
-        );
-    }
-
     @ParameterizedTest(name="age: {0}, gender: {1} and trigger count: {2} should return {3}")
     @MethodSource("patientProvider")
     public void calculateRisk_withPatientAndNotes_shouldReturnRiskLevel(
@@ -115,6 +85,36 @@ public class RiskServiceTest {
 
         assertThrows(PatientNotFoundException.class, ()->riskService.calculateRisk(1));
         verify(patientProxy).getPatient(anyInt());
+    }
+
+    private static Stream<Arguments> patientProvider() {
+        return Stream.of(
+                // Age > 30
+                Arguments.of(31, "M", 0, RiskLevel.NONE),
+                Arguments.of(31, "F", 1, RiskLevel.NONE),
+                Arguments.of(31, "F", 2, RiskLevel.BORDERLINE),
+                Arguments.of(31, "F", 5, RiskLevel.BORDERLINE),
+                Arguments.of(31, "F", 6, RiskLevel.IN_DANGER),
+                Arguments.of(31, "F", 7, RiskLevel.IN_DANGER),
+                Arguments.of(31, "F", 8, RiskLevel.EARLY_ONSET),
+                Arguments.of(31, "F", 10, RiskLevel.EARLY_ONSET),
+
+                // Age <= 30, gender M
+                Arguments.of(30, "M", 0, RiskLevel.NONE),
+                Arguments.of(30, "M", 2, RiskLevel.NONE),
+                Arguments.of(30, "M", 3, RiskLevel.IN_DANGER),
+                Arguments.of(30, "M", 4, RiskLevel.IN_DANGER),
+                Arguments.of(30, "M", 5, RiskLevel.EARLY_ONSET),
+                Arguments.of(30, "M", 6, RiskLevel.EARLY_ONSET),
+
+                // Age <= 30, gender F
+                Arguments.of(30, "F", 0, RiskLevel.NONE),
+                Arguments.of(30, "F", 3, RiskLevel.NONE),
+                Arguments.of(30, "F", 4, RiskLevel.IN_DANGER),
+                Arguments.of(30, "F", 6, RiskLevel.IN_DANGER),
+                Arguments.of(30, "F", 7, RiskLevel.EARLY_ONSET),
+                Arguments.of(30, "F", 8, RiskLevel.EARLY_ONSET)
+        );
     }
 
     private static class TestFeignException extends FeignException {

@@ -19,7 +19,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,6 +53,7 @@ public class NoteControllerTest {
     @Test
     @WithMockUser
     public void getNotesByPatientId_shouldReturnNotesAndOk() throws Exception {
+
         when(noteService.getNotesByPatientId(anyInt())).thenReturn(List.of(note));
 
         MvcResult result = mockMvc
@@ -73,6 +73,7 @@ public class NoteControllerTest {
     @Test
     @WithMockUser
     public void getNotesByPatientId_withNoNotesException_shouldReturnNoContent() throws Exception {
+
         when(noteService.getNotesByPatientId(anyInt())).thenThrow(new NoteNotFoundException());
 
         MvcResult result = mockMvc
@@ -89,6 +90,7 @@ public class NoteControllerTest {
     @Test
     @WithMockUser
     public void addNote_shouldReturnNoteAndCreated() throws Exception {
+
         when(noteService.addNote(any(Note.class))).thenReturn(note);
 
         MvcResult result = mockMvc
@@ -99,7 +101,7 @@ public class NoteControllerTest {
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
-        Note resultNote =new ObjectMapper().readValue(resultContent,Note.class);
+        Note resultNote = new ObjectMapper().readValue(resultContent, Note.class);
 
         assertEquals(note.getPatientId(), resultNote.getPatientId());
         verify(noteService).addNote(any(Note.class));

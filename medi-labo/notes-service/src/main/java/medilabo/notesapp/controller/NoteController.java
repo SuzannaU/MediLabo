@@ -36,7 +36,6 @@ public class NoteController {
         logger.info("GetMapping for /notes/{}", patientId);
         try {
             List<Note> notes = noteService.getNotesByPatientId(patientId);
-            logger.info("getNotesByPatientId returns {} notes", notes.size());
             return new ResponseEntity<>(notes, HttpStatus.OK);
         } catch (NoteNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

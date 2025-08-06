@@ -13,6 +13,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <spring-boot.version>3.5.0</spring-boot.version>
+        <spring-cloud.version>2025.0.0</spring-cloud.version>
         <jacoco.version>0.8.12</jacoco.version>
         <failsafe.version>3.5.3</failsafe.version>
         <surefire.version>3.5.2</surefire.version>
@@ -30,11 +31,11 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>2025.0.0</version>
+                <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- Library used by netflix eureka-client, version is forced to avoid a vulnerability -->
+            <!-- Library used by netflix-eureka-client, version is forced to avoid a vulnerability -->
             <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>

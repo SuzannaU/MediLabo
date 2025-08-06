@@ -32,6 +32,7 @@ public class NoteServiceTest {
 
     @Test
     public void getNotesByPatientId_shouldCallRepoAndReturnNotes() {
+
         when(noteRepository.findByPatientId(anyInt())).thenReturn((List.of(new Note())));
 
         List<Note> notes = noteService.getNotesByPatientId(1);
@@ -44,13 +45,14 @@ public class NoteServiceTest {
     public void getNotesByPatientId_withNoNotes_shouldThrow() {
         when(noteRepository.findByPatientId(anyInt())).thenReturn(new ArrayList<>());
 
-        assertThrows(NoteNotFoundException.class, ()->noteService.getNotesByPatientId(1));
+        assertThrows(NoteNotFoundException.class, () -> noteService.getNotesByPatientId(1));
 
         verify(noteRepository).findByPatientId(anyInt());
     }
 
     @Test
     public void addNote_shouldCallRepoAndReturnNote() {
+
         Note note = new Note();
         note.setContent("content");
         when(noteRepository.save(any(Note.class))).thenReturn(note);

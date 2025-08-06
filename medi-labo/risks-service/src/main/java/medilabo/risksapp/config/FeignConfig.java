@@ -2,17 +2,11 @@ package medilabo.risksapp.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import feign.codec.ErrorDecoder;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Base64;
 
-/**
- * Configuration for Feign Client
- *
- */
 @Configuration
 public class FeignConfig implements RequestInterceptor {
 

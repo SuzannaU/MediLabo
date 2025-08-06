@@ -57,18 +57,6 @@ public class PatientControllerIT {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
-    private static Stream<Arguments> invalidPatientProvider() {
-        return Stream.of(
-                Arguments.of(new Patient(null, "lastname", LocalDate.now(), "g")),
-                Arguments.of(new Patient("firstname", null, LocalDate.now(), "g")),
-                Arguments.of(new Patient("firstname", "lastname", null, "g")),
-                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), null)),
-                Arguments.of(new Patient("", "lastname", LocalDate.now(), "g")),
-                Arguments.of(new Patient("firstname", "", LocalDate.now(), "g")),
-                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), ""))
-        );
-    }
-
     @Test
     @WithMockUser
     public void getAllPatients_shouldReturnPatientsAndOk() throws Exception {
@@ -223,5 +211,17 @@ public class PatientControllerIT {
 
         mockMvc.perform(delete("/patients/123456789"))
                 .andExpect(status().isNotFound());
+    }
+
+    private static Stream<Arguments> invalidPatientProvider() {
+        return Stream.of(
+                Arguments.of(new Patient(null, "lastname", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", null, LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", "lastname", null, "g")),
+                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), null)),
+                Arguments.of(new Patient("", "lastname", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", "", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), ""))
+        );
     }
 }

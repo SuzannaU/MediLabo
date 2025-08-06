@@ -46,7 +46,7 @@ public class PatientController {
     /**
      * Gets the List of all patients.
      *
-     * @return  a ResponseEntity containing the List with 200 code, or with 204 if there are no Patients
+     * @return a ResponseEntity containing the List with 200 code, or with 204 if there are no Patients
      */
     @GetMapping
     public ResponseEntity<List<Patient>> getAllPatients() {
@@ -62,7 +62,7 @@ public class PatientController {
      * Gets patient by id.
      *
      * @param id the id
-     * @return  ResponseEntity with the patient and 200, or ResponseEntity with 404 if no patient is found with this id
+     * @return ResponseEntity with the patient and 200, or ResponseEntity with 404 if no patient is found with this id
      */
     @GetMapping("/{id}")
     public ResponseEntity<Patient> getPatientById(@PathVariable("id") int id) {

@@ -31,6 +31,7 @@ public class PatientServiceTest {
 
     @Test
     public void getAllPatients_shouldCallRepoAndReturnPatients() {
+
         when(patientRepo.findAll()).thenReturn(List.of(new Patient()));
 
         List<Patient> patients = patientService.getAllPatients();
@@ -41,6 +42,7 @@ public class PatientServiceTest {
 
     @Test
     public void getPatientById_shouldCallRepoAndReturnPatient() {
+
         when(patientRepo.findById(anyInt())).thenReturn(Optional.of(new Patient()));
 
         Patient patient = patientService.getPatientById(1);
@@ -51,6 +53,7 @@ public class PatientServiceTest {
 
     @Test
     public void getPatientById_withNoPatient_shouldThrow() {
+
         when(patientRepo.findById(anyInt())).thenReturn(Optional.empty());
 
         assertThrows(NonExistingPatientException.class, () -> patientService.getPatientById(1));
@@ -60,7 +63,8 @@ public class PatientServiceTest {
 
     @Test
     public void addPatient_shouldCallRepoAndReturnPatient() {
-        Patient patient = new Patient("firstname", "lastname", LocalDate.now(), "gender");
+
+        Patient patient = new Patient("firstname", "lastname", LocalDate.now(), "g");
         when(patientRepo.save(any(Patient.class))).thenReturn(patient);
 
         Patient savedPatient = patientService.addPatient(patient);
@@ -71,7 +75,7 @@ public class PatientServiceTest {
 
     @Test
     public void updatePatient_shouldCallRepoAndReturnPatient() {
-        Patient patient = new Patient("firstname", "lastname", LocalDate.now(), "gender");
+        Patient patient = new Patient("firstname", "lastname", LocalDate.now(), "g");
         when(patientRepo.save(any(Patient.class))).thenReturn(patient);
 
         Patient updatedPatient = patientService.updatePatient(patient);
@@ -82,7 +86,7 @@ public class PatientServiceTest {
 
     @Test
     public void deletePatient_shouldCallRepo() {
-        Patient patient = new Patient("firstname", "lastname", LocalDate.now(), "gender");
+        Patient patient = new Patient("firstname", "lastname", LocalDate.now(), "g");
         doNothing().when(patientRepo).delete(any(Patient.class));
 
         patientService.deletePatient(patient);

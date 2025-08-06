@@ -40,6 +40,7 @@ public class NoteControllerIT {
 
     private List<Note> backup;
 
+    // Notes present in the test database are saved before each test and restored after each test to ensure data stability between tests.
     @BeforeEach
     public void beforeEach() {
         backup = noteRepository.findAll();
@@ -85,6 +86,7 @@ public class NoteControllerIT {
     @Test
     @WithMockUser
     public void addNote_shouldReturnNoteAndCreated() throws Exception {
+
         Note note = new Note();
         note.setContent("content");
 
@@ -96,7 +98,7 @@ public class NoteControllerIT {
                 .andReturn();
 
         String resultContent = result.getResponse().getContentAsString();
-        Note resultNote =new ObjectMapper().readValue(resultContent,Note.class);
+        Note resultNote = new ObjectMapper().readValue(resultContent, Note.class);
 
         assertEquals(note.getContent(), resultNote.getContent());
     }

@@ -52,7 +52,7 @@ public class PatientControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        patient = new Patient("firstname", "lastname", LocalDate.now(), "gender");
+        patient = new Patient("firstname", "lastname", LocalDate.now(), "g");
 
         //Allow Jackson to parse the LocalDate
         objectMapper = new ObjectMapper();
@@ -60,21 +60,10 @@ public class PatientControllerTest {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
-    private static Stream<Arguments> invalidPatientProvider() {
-        return Stream.of(
-                Arguments.of(new Patient(null, "lastname", LocalDate.now(), "g")),
-                Arguments.of(new Patient("firstname", null, LocalDate.now(), "g")),
-                Arguments.of(new Patient("firstname", "lastname", null, "g")),
-                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), null)),
-                Arguments.of(new Patient("", "lastname", LocalDate.now(), "g")),
-                Arguments.of(new Patient("firstname", "", LocalDate.now(), "g")),
-                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), ""))
-        );
-    }
-
     @Test
     @WithMockUser
     public void getAllPatients_shouldReturnPatientsAndOk() throws Exception {
+
         when(patientService.getAllPatients()).thenReturn(List.of(new Patient()));
 
         MvcResult result = mockMvc
@@ -94,6 +83,7 @@ public class PatientControllerTest {
     @Test
     @WithMockUser
     public void getAllPatients_withNoPatients_shouldReturnNoContent() throws Exception {
+
         when(patientService.getAllPatients()).thenReturn(new ArrayList<>());
 
         MvcResult result = mockMvc
@@ -110,6 +100,7 @@ public class PatientControllerTest {
     @Test
     @WithMockUser
     public void getPatientById_shouldReturnPatientAndOk() throws Exception {
+
         when(patientService.getPatientById(anyInt())).thenReturn(new Patient());
 
         MvcResult result = mockMvc
@@ -119,7 +110,7 @@ public class PatientControllerTest {
 
         String resultContent = result.getResponse().getContentAsString();
         Patient resultPatient = new ObjectMapper().readValue(resultContent, new TypeReference<Patient>() {
-                });
+        });
 
         assertNotNull(resultPatient);
         verify(patientService).getPatientById(anyInt());
@@ -128,6 +119,7 @@ public class PatientControllerTest {
     @Test
     @WithMockUser
     public void getPatientById_withException_shouldReturnNotFound() throws Exception {
+
         when(patientService.getPatientById(anyInt())).thenThrow(new NonExistingPatientException());
 
         MvcResult result = mockMvc
@@ -144,6 +136,7 @@ public class PatientControllerTest {
     @Test
     @WithMockUser
     public void registerPatient_shouldReturnPatientAndCreated() throws Exception {
+
         when(patientService.addPatient(any(Patient.class))).thenReturn(patient);
 
         MvcResult result = mockMvc
@@ -155,7 +148,7 @@ public class PatientControllerTest {
 
         String resultContent = result.getResponse().getContentAsString();
         Patient resultPatient = objectMapper.readValue(resultContent, new TypeReference<Patient>() {
-                });
+        });
 
         assertEquals(patient.getId(), resultPatient.getId());
         verify(patientService).addPatient(any(Patient.class));
@@ -181,6 +174,7 @@ public class PatientControllerTest {
     @Test
     @WithMockUser
     public void registerPatient_withException_shouldReturnInternalServerError() throws Exception {
+
         when(patientService.addPatient(any(Patient.class))).thenThrow(new RuntimeException());
 
         MvcResult result = mockMvc
@@ -199,6 +193,7 @@ public class PatientControllerTest {
     @Test
     @WithMockUser
     public void updatePatient_shouldReturnPatientAndOK() throws Exception {
+
         when(patientService.updatePatient(any(Patient.class))).thenReturn(patient);
 
         MvcResult result = mockMvc
@@ -210,7 +205,7 @@ public class PatientControllerTest {
 
         String resultContent = result.getResponse().getContentAsString();
         Patient resultPatient = objectMapper.readValue(resultContent, new TypeReference<Patient>() {
-                });
+        });
 
         assertEquals(patient.getId(), resultPatient.getId());
         verify(patientService).updatePatient(any(Patient.class));
@@ -236,6 +231,7 @@ public class PatientControllerTest {
     @Test
     @WithMockUser
     public void updatePatient_withException_shouldInternalServerError() throws Exception {
+
         when(patientService.updatePatient(any(Patient.class))).thenThrow(new RuntimeException());
 
         MvcResult result = mockMvc
@@ -273,5 +269,17 @@ public class PatientControllerTest {
                 .andExpect((status().isNotFound()));
 
         verify(patientService).deletePatient(any(Patient.class));
+    }
+
+    private static Stream<Arguments> invalidPatientProvider() {
+        return Stream.of(
+                Arguments.of(new Patient(null, "lastname", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", null, LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", "lastname", null, "g")),
+                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), null)),
+                Arguments.of(new Patient("", "lastname", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", "", LocalDate.now(), "g")),
+                Arguments.of(new Patient("firstname", "lastname", LocalDate.now(), ""))
+        );
     }
 }

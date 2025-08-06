@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 
+/**
+ * Service called by RiskController. Uses TriggerUtil and PatientsProxy to gather data needed for Risk calculation.
+ */
 @Service
 public class RiskService {
     private final Logger logger = LoggerFactory.getLogger(RiskService.class);
@@ -25,6 +28,12 @@ public class RiskService {
         this.triggerUtil = triggerUtil;
     }
 
+    /**
+     * Calculates the risk of diabetes type-2 for a patient based on age, gender, and the number of triggers present in their notes.
+     *
+     * @param patientId
+     * @return the RiskLevel
+     */
     public RiskLevel calculateRisk(int patientId) {
 
         Patient patient = getPatientById(patientId);
@@ -38,7 +47,7 @@ public class RiskService {
         if (triggers == 0) {
             return RiskLevel.NONE;
         } else if (age > 30) {
-            // trigger = 1 ??
+            // Missing 1-trigger case => fallback to NONE
             if (triggers >= 2 && triggers <= 5) {
                 return RiskLevel.BORDERLINE;
             } else if (triggers == 6 || triggers == 7) {
@@ -48,14 +57,14 @@ public class RiskService {
             }
         } else {
             if (gender.equals("M")) {
-                // trigger = 1 ou 2 ??
+                // Missing 1- or 2-triggers cases => fallback to NONE
                 if (triggers >= 3 && triggers < 5) {
                     return RiskLevel.IN_DANGER;
                 } else if (triggers >= 5) {
                     return RiskLevel.EARLY_ONSET;
                 }
             } else if (gender.equals("F")) {
-                // trigger = 1 ou 2 ou 3 ??
+                // Missing 1- or 2- or 3-triggers cases => fallback to NONE
                 if (triggers >= 4 && triggers < 7) {
                     return RiskLevel.IN_DANGER;
                 } else if (triggers >= 7) {

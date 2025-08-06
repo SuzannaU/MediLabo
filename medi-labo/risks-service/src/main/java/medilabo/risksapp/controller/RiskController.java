@@ -22,6 +22,12 @@ public class RiskController {
         this.riskService = riskService;
     }
 
+    /**
+     * Asks riskService for RiskLevel according to a patient ID.
+     *
+     * @param id the patient ID
+     * @return a ResponseEntity containing the RiskLevel as String with 200 status, an empty one with 404 status if no patient matches the ID, or with 500 status if an error occurs.
+     */
     @GetMapping("/risks/{id}")
     public ResponseEntity<String> getRiskLevelByPatientId(@PathVariable("id") int id) {
         logger.info("GetMapping for /risks/{id}");
