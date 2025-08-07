@@ -1,4 +1,11 @@
+server:
+  port: 9010
+
 spring:
+  application:
+    name: gateway-service
+
+  ## Gateway configuration
   cloud:
     gateway:
       server:
@@ -13,8 +20,26 @@ spring:
       cache:
         ttl: 5s
 
+## Eureka configuration
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
-    registry-fetch-interval-seconds: 5
     fetch-registry: true
     register-with-eureka: true
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://${EUREKA_HOST:localhost}:8761/eureka/
+
+## Credentials for in-memory user -- ONLY for development phase
+medilabo:
+  user:
+    username: user
+    password: password
+
+## Logging level set to DEBUG for the development phase. Can be downed to INFO for production
+logging:
+  level:
+    medilabo.gatewayapi: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %blue([%15.15t]) %-5p %green(%30.30c{0}: %-20M) --- %m%n"
