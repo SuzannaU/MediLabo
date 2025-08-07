@@ -65,8 +65,8 @@ public class NoteService {
             ResponseEntity<Note> response = noteProxy.createNote(note);
             int statusCode = response.getStatusCode().value();
             if (statusCode == 201) {
-                logger.info("Successfully added note");
                 riskService.risksCache.remove(note.getPatientId());
+                logger.info("Successfully added note. RiskLevel for patient {} removed from cache", note.getPatientId());
                 return true;
             }
             logger.error("Error adding note. Error: {}", statusCode);

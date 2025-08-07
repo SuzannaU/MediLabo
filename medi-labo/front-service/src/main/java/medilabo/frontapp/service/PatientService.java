@@ -20,9 +20,11 @@ public class PatientService {
     private final Logger logger = LoggerFactory.getLogger(PatientService.class);
 
     private final PatientProxy patientProxy;
+    private final RiskService riskService;
 
-    public PatientService(PatientProxy patientProxy) {
+    public PatientService(PatientProxy patientProxy, RiskService riskService) {
         this.patientProxy = patientProxy;
+        this.riskService = riskService;
     }
 
     /**
@@ -108,7 +110,8 @@ public class PatientService {
             ResponseEntity<Patient> response = patientProxy.updatePatient(id, patient);
             int statusCode = response.getStatusCode().value();
             if (statusCode == 200) {
-                logger.info("Patient with id {} updated successfully", id);
+                riskService.risksCache.remove(id);
+                logger.info("Patient with id {} updated successfully. RiskLevel removed from cache.", id);
                 return true;
             }
             logger.error("Problem updating patient. Error: {} ", statusCode);
